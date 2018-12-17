@@ -1,13 +1,8 @@
 package com.lxy.blogproject.dao;
 
 import com.lxy.blogproject.entity.ArticleCategory;
-import com.lxy.blogproject.entity.ArticleCategoryExample;
-import java.util.List;
+import com.lxy.blogproject.util.MyMapper;
 
-public interface ArticleCategoryMapper {
-    int insert(ArticleCategory record);
+public interface ArticleCategoryMapper extends MyMapper<ArticleCategory> {
 
-    int insertSelective(ArticleCategory record);
-
-    List<ArticleCategory> selectByExample(ArticleCategoryExample example);
 }
