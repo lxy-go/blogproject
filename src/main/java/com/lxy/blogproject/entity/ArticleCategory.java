@@ -1,55 +1,121 @@
 package com.lxy.blogproject.entity;
 
 import java.util.Date;
+import javax.persistence.*;
 
+@Table(name = "tbl_article_category")
 public class ArticleCategory {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long category_id;
+    /**
+     * 分类id
+     */
+    @Column(name = "category_id")
+    private Long categoryId;
 
-    private Long article_id;
+    /**
+     * 文章id
+     */
+    @Column(name = "article_id")
+    private Long articleId;
 
-    private Date create_by;
+    /**
+     * 创建时间
+     */
+    @Column(name = "create_by")
+    private Date createBy;
 
-    private Date modified_by;
+    /**
+     * 更新时间
+     */
+    @Column(name = "modified_by")
+    private Date modifiedBy;
 
+    /**
+     * @return id
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * @param id
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
-    public Long getCategory_id() {
-        return category_id;
+    /**
+     * 获取分类id
+     *
+     * @return category_id - 分类id
+     */
+    public Long getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategory_id(Long category_id) {
-        this.category_id = category_id;
+    /**
+     * 设置分类id
+     *
+     * @param categoryId 分类id
+     */
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 
-    public Long getArticle_id() {
-        return article_id;
+    /**
+     * 获取文章id
+     *
+     * @return article_id - 文章id
+     */
+    public Long getArticleId() {
+        return articleId;
     }
 
-    public void setArticle_id(Long article_id) {
-        this.article_id = article_id;
+    /**
+     * 设置文章id
+     *
+     * @param articleId 文章id
+     */
+    public void setArticleId(Long articleId) {
+        this.articleId = articleId;
     }
 
-    public Date getCreate_by() {
-        return create_by;
+    /**
+     * 获取创建时间
+     *
+     * @return create_by - 创建时间
+     */
+    public Date getCreateBy() {
+        return createBy;
     }
 
-    public void setCreate_by(Date create_by) {
-        this.create_by = create_by;
+    /**
+     * 设置创建时间
+     *
+     * @param createBy 创建时间
+     */
+    public void setCreateBy(Date createBy) {
+        this.createBy = createBy;
     }
 
-    public Date getModified_by() {
-        return modified_by;
+    /**
+     * 获取更新时间
+     *
+     * @return modified_by - 更新时间
+     */
+    public Date getModifiedBy() {
+        return modifiedBy;
     }
 
-    public void setModified_by(Date modified_by) {
-        this.modified_by = modified_by;
+    /**
+     * 设置更新时间
+     *
+     * @param modifiedBy 更新时间
+     */
+    public void setModifiedBy(Date modifiedBy) {
+        this.modifiedBy = modifiedBy;
     }
 }

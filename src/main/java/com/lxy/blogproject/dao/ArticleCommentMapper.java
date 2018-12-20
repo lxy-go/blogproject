@@ -1,13 +1,7 @@
 package com.lxy.blogproject.dao;
 
 import com.lxy.blogproject.entity.ArticleComment;
-import com.lxy.blogproject.entity.ArticleCommentExample;
-import java.util.List;
+import com.lxy.blogproject.util.MyMapper;
 
-public interface ArticleCommentMapper {
-    int insert(ArticleComment record);
-
-    int insertSelective(ArticleComment record);
-
-    List<ArticleComment> selectByExample(ArticleCommentExample example);
+public interface ArticleCommentMapper extends MyMapper<ArticleComment> {
 }

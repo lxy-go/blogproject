@@ -1,54 +1,112 @@
 package com.lxy.blogproject.entity;
 
 import java.util.Date;
+import javax.persistence.*;
 
+@Table(name = "tbl_article_content")
 public class ArticleContent {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long article_id;
+    /**
+     * 对应文章ID
+     */
+    @Column(name = "article_id")
+    private Long articleId;
 
-    private Date create_by;
+    /**
+     * 创建时间
+     */
+    @Column(name = "create_by")
+    private Date createBy;
 
-    private Date modifield_by;
+    /**
+     * 更新时间
+     */
+    @Column(name = "modifield_by")
+    private Date modifieldBy;
 
     private String content;
 
+    /**
+     * @return id
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * @param id
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
-    public Long getArticle_id() {
-        return article_id;
+    /**
+     * 获取对应文章ID
+     *
+     * @return article_id - 对应文章ID
+     */
+    public Long getArticleId() {
+        return articleId;
     }
 
-    public void setArticle_id(Long article_id) {
-        this.article_id = article_id;
+    /**
+     * 设置对应文章ID
+     *
+     * @param articleId 对应文章ID
+     */
+    public void setArticleId(Long articleId) {
+        this.articleId = articleId;
     }
 
-    public Date getCreate_by() {
-        return create_by;
+    /**
+     * 获取创建时间
+     *
+     * @return create_by - 创建时间
+     */
+    public Date getCreateBy() {
+        return createBy;
     }
 
-    public void setCreate_by(Date create_by) {
-        this.create_by = create_by;
+    /**
+     * 设置创建时间
+     *
+     * @param createBy 创建时间
+     */
+    public void setCreateBy(Date createBy) {
+        this.createBy = createBy;
     }
 
-    public Date getModifield_by() {
-        return modifield_by;
+    /**
+     * 获取更新时间
+     *
+     * @return modifield_by - 更新时间
+     */
+    public Date getModifieldBy() {
+        return modifieldBy;
     }
 
-    public void setModifield_by(Date modifield_by) {
-        this.modifield_by = modifield_by;
+    /**
+     * 设置更新时间
+     *
+     * @param modifieldBy 更新时间
+     */
+    public void setModifieldBy(Date modifieldBy) {
+        this.modifieldBy = modifieldBy;
     }
 
+    /**
+     * @return content
+     */
     public String getContent() {
         return content;
     }
 
+    /**
+     * @param content
+     */
     public void setContent(String content) {
         this.content = content == null ? null : content.trim();
     }
