@@ -1,65 +1,162 @@
 package com.lxy.blogproject.entity;
 
 import java.util.Date;
+import javax.persistence.*;
 
+@Table(name = "sys_log")
 public class SysLog {
+    /**
+     * 主键
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * 操作地址的IP
+     */
     private String ip;
 
-    private Date create_by;
+    /**
+     * 操作时间
+     */
+    @Column(name = "create_by")
+    private Date createBy;
 
+    /**
+     * 操作内容
+     */
     private String remark;
 
-    private String operate_url;
+    /**
+     * 操作的访问地址
+     */
+    @Column(name = "operate_url")
+    private String operateUrl;
 
-    private String operate_by;
+    /**
+     * 操作的浏览器
+     */
+    @Column(name = "operate_by")
+    private String operateBy;
 
+    /**
+     * 获取主键
+     *
+     * @return id - 主键
+     */
     public Long getId() {
         return id;
     }
 
+    /**
+     * 设置主键
+     *
+     * @param id 主键
+     */
     public void setId(Long id) {
         this.id = id;
     }
 
+    /**
+     * 获取操作地址的IP
+     *
+     * @return ip - 操作地址的IP
+     */
     public String getIp() {
         return ip;
     }
 
+    /**
+     * 设置操作地址的IP
+     *
+     * @param ip 操作地址的IP
+     */
     public void setIp(String ip) {
         this.ip = ip == null ? null : ip.trim();
     }
 
-    public Date getCreate_by() {
-        return create_by;
+    /**
+     * 获取操作时间
+     *
+     * @return create_by - 操作时间
+     */
+    public Date getCreateBy() {
+        return createBy;
     }
 
-    public void setCreate_by(Date create_by) {
-        this.create_by = create_by;
+    /**
+     * 设置操作时间
+     *
+     * @param createBy 操作时间
+     */
+    public void setCreateBy(Date createBy) {
+        this.createBy = createBy;
     }
 
+    /**
+     * 获取操作内容
+     *
+     * @return remark - 操作内容
+     */
     public String getRemark() {
         return remark;
     }
 
+    /**
+     * 设置操作内容
+     *
+     * @param remark 操作内容
+     */
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public String getOperate_url() {
-        return operate_url;
+    /**
+     * 获取操作的访问地址
+     *
+     * @return operate_url - 操作的访问地址
+     */
+    public String getOperateUrl() {
+        return operateUrl;
     }
 
-    public void setOperate_url(String operate_url) {
-        this.operate_url = operate_url == null ? null : operate_url.trim();
+    /**
+     * 设置操作的访问地址
+     *
+     * @param operateUrl 操作的访问地址
+     */
+    public void setOperateUrl(String operateUrl) {
+        this.operateUrl = operateUrl == null ? null : operateUrl.trim();
     }
 
-    public String getOperate_by() {
-        return operate_by;
+    /**
+     * 获取操作的浏览器
+     *
+     * @return operate_by - 操作的浏览器
+     */
+    public String getOperateBy() {
+        return operateBy;
     }
 
-    public void setOperate_by(String operate_by) {
-        this.operate_by = operate_by == null ? null : operate_by.trim();
+    /**
+     * 设置操作的浏览器
+     *
+     * @param operateBy 操作的浏览器
+     */
+    public void setOperateBy(String operateBy) {
+        this.operateBy = operateBy == null ? null : operateBy.trim();
+    }
+
+    @Override
+    public String toString() {
+        return "SysLog{" +
+                "id=" + id +
+                ", ip='" + ip + '\'' +
+                ", createBy=" + createBy +
+                ", remark='" + remark + '\'' +
+                ", operateUrl='" + operateUrl + '\'' +
+                ", operateBy='" + operateBy + '\'' +
+                '}';
     }
 }
