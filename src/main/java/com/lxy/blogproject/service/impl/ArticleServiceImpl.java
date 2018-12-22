@@ -9,6 +9,7 @@ import com.lxy.blogproject.entity.ArticleCategory;
 import com.lxy.blogproject.entity.ArticleContent;
 import com.lxy.blogproject.entity.ArticleInfo;
 import com.lxy.blogproject.entity.ArticlePicture;
+import com.lxy.blogproject.form.ArticleForm;
 import com.lxy.blogproject.service.ArticleService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,5 +40,28 @@ public class ArticleServiceImpl implements ArticleService {
             res.add(modelMapper.map(articleInfo, ArticleDTO.class));
         }
         return res;
+    }
+
+    @Override
+    public ArticleInfo getArticleById(Long id) {
+        ArticleInfo articleInfo = articleInfoMapper.selectByPrimaryKey(id);
+        return articleInfo;
+    }
+
+    @Override
+    public void deleteArticleById(Long id) {
+        articleInfoMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public void save(ArticleForm articleForm) {
+
+        ArticleInfo articleInof = modelMapper.map(articleForm, ArticleInfo.class);
+        ArticleContent articleContent = modelMapper.map(articleForm, ArticleContent.class);
+        ArticleCategory articleCategory = modelMapper.map(articleForm, ArticleCategory.class);
+
+        articleInfoMapper.insert(articleInof);
+        articleContentMapper.insert(articleContent);
+        articleCategoryMapper.insert(articleCategory);
     }
 }
