@@ -89,6 +89,7 @@ public class ArticleServiceImpl implements ArticleService {
         //content&article_content
         articleContent.setId(contentId);
         articleContent.setArticleId(articleId);
+        articleContent.setModifiedBy(articleForm.getModifiedBy());
         articleContentMapper.insert(articleContent);
     }
 
@@ -136,15 +137,21 @@ public class ArticleServiceImpl implements ArticleService {
         articleCategory.setArticleId(articleId);
         articleContent.setArticleId(articleId);
 
-        ArticleCategory articleCategorysql = articleCategoryMapper.selectOne(articleCategory);
+        List<ArticleCategory> categories = articleCategoryMapper.select(articleCategory);
         ArticleContent articleContentsql = articleContentMapper.selectOne(articleContent);
-
-        if (articleCategorysql!=null){
-            Long categoryId = articleCategorysql.getCategoryId();
+        for (ArticleCategory category : categories) {
+            Long categoryId = category.getCategoryId();
+            CategoryInfo categoryInfosql = categoryInfoMapper.selectByPrimaryKey(category.getCategoryId());
             categoryInfo.setId(categoryId);
-            categoryInfoMapper.delete(categoryInfo);
-            articleCategoryMapper.delete(articleCategorysql);
+            if (categoryInfosql.getNumber()>=1){
+                categoryInfo.setNumber((byte) (categoryInfosql.getNumber()-1));
+            }else{
+                categoryInfo.setNumber((byte) 0);
+            }
+            categoryInfoMapper.updateByPrimaryKeySelective(categoryInfo);
+            articleCategoryMapper.delete(category);
         }
+
         if(articleContentsql!=null){
             articleContentMapper.delete(articleContentsql);
         }
@@ -157,6 +164,59 @@ public class ArticleServiceImpl implements ArticleService {
      */
     @Override
     public void update(ArticleForm articleForm) {
+        Date date = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String modifiedDate = dateFormat.format(date);//更新时间ModifiedBy
+        SnowFlake snowFlake = new SnowFlake(2, 3);
+        long categoryId = snowFlake.nextId();
+
+        articleForm.setModifiedBy(modifiedDate);
+        String name = articleForm.getName();
+        String[] categories = name.split(",");
+
+        ArticleInfo articleInfo = new ArticleInfo();
+        CategoryInfo categoryInfo = new CategoryInfo();
+        ArticleContent articleContent = new ArticleContent();
+        ArticleCategory articleCategory = new ArticleCategory();
+        //更新ArticleInfo
+        Long articleId = articleForm.getId();
+        articleInfo.setId(articleId);
+        articleInfo.setIsTop(false);
+        articleInfo.setSummary(articleForm.getSummary());
+        articleInfo.setTitle(articleForm.getTitle());
+        articleInfo.setModifiedBy(modifiedDate);
+        articleInfoMapper.updateByPrimaryKeySelective(articleInfo);
+        //更新category&articleCategory
+        articleCategory.setArticleId(articleId);
+        List<ArticleCategory> articleCategoryList = articleCategoryMapper.select(articleCategory);
+        List<CategoryInfo> categoryInfos = categoryInfoMapper.selectAll();
+        for (ArticleCategory category : articleCategoryList) {
+            CategoryInfo categorysql = categoryInfoMapper.selectByPrimaryKey(category.getCategoryId());
+            for (String categoryName : categories) {
+                //如果传入的类别和之前的不符，例如 Java（新属性） != Hadoop（原来属性）
+                if (categoryName != categorysql.getName()){
+                    for (CategoryInfo info : categoryInfos) {
+                        //如果标签不存在,是新写的，就insert数据库,在原来的Number属性上-1，存在而且是
+                        if(categoryName != info.getName()){
+                            categoryInfo.setId(categoryId);
+                            categoryInfo.setNumber((byte) 1);
+                            categoryInfo.setModifiedBy(modifiedDate);
+                            categoryInfoMapper.insert(categoryInfo);
+                            int num = categorysql.getNumber() - 1;
+                            categorysql.setNumber((byte) num);
+                            categorysql.setModifiedBy(modifiedDate);
+                            categoryInfoMapper.updateByPrimaryKeySelective(categorysql);
+                        }
+                    }
+                }
+            }
+        }
+        //更新content
+        articleContent.setArticleId(articleId);
+        ArticleContent articleContentsql = articleContentMapper.selectOne(articleContent);
+        articleContentsql.setContent(articleForm.getContent());
+        articleContentsql.setModifiedBy(modifiedDate);
+        articleContentMapper.updateByPrimaryKeySelective(articleContentsql);
 
     }
 
