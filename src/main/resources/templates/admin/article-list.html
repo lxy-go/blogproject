@@ -20,6 +20,60 @@
                     <div class=" form-group">
                         <label  class=" control-label">文章标题</label>
                         <div >
+                            <input type="text" name="title" class="form-control" id="article_add_input" placeholder="title">
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label  class="control-label">文章简介</label>
+                        <div >
+                            <input type="text" name="summary" class="form-control" id="summary_add_input" placeholder="最多输入100个字">
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label  class="control-label">标签类型</label>
+                            <div >
+                                <input type="text" name="name" class="form-control" id="category_add_input" placeholder="用逗号分隔">
+                                <span class="help-block"></span>
+                            </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label  class="control-label">文章内容</label>
+                        <div>
+                            <textarea class="form-control" rows="8" name="content"></textarea>
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="article_add_btn">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--更新的模态框-->
+<div class="modal fade" id="articleUpdateModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myUpdateModalLabel">修改文章</h4>
+            </div>
+
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class=" form-group">
+                        <label  class=" control-label">文章标题</label>
+                        <div >
                             <input type="text" name="title" class="form-control" id="article_update_input" placeholder="title">
                             <span class="help-block"></span>
                         </div>
@@ -35,10 +89,10 @@
 
                     <div class="form-group">
                         <label  class="control-label">标签类型</label>
-                            <div >
-                                <input type="text" name="category" class="form-control" id="category_update_input" placeholder="用逗号分隔">
-                                <span class="help-block"></span>
-                            </div>
+                        <div >
+                            <input type="text" name="name" class="form-control" id="category_update_input" placeholder="用逗号分隔">
+                            <span class="help-block"></span>
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -131,8 +185,8 @@
                                         <td th:text="${article.traffic}">12000.00$ </td>
                                         <td th:text="${article.isTop}? 'True' : 'False'"><span class="label label-info label-mini">Due</span></td>
                                         <td>
-                                            <button class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></button>
-                                            <button class="btn btn-danger btn-xs delete_btn" data-toggle="modal" data-target="#deleteModal" th:id="${article.id}"><i class="fa fa-trash-o "></i></button>
+                                            <button class="btn btn-primary btn-xs update_btn"   data-toggle="modal" data-target="#articleUpdateModal" th:attr="del_id=${article.id}"><i class="fa fa-pencil"></i></button>
+                                            <button class="btn btn-danger btn-xs delete_btn" data-toggle="modal" data-target="#deleteModal" th:attr="del_id=${article.id}"><i class="fa fa-trash-o "></i></button>
                                         </td>
                                     </tr>
 
@@ -180,7 +234,8 @@
 
 /*弹出删除模态框*/
 $(".delete_btn").click(function () {
-    var btn_id = $(this).attr("id");
+    var btn_id = $(this).attr("del_id");
+    console.log(btn_id);
     getArticle(btn_id);
     $(".confrim-delete").attr("dele-id",btn_id);
 });
@@ -209,7 +264,7 @@ $(".confrim-delete").click(function () {
 })
 
 /*新增博文*/
-$("#article_update_btn").click(function () {
+$("#article_add_btn").click(function () {
     $.ajax({
         url:"/admin/article/add",
         type:"POST",
@@ -221,7 +276,54 @@ $("#article_update_btn").click(function () {
             location.reload();
         }
     })
-})
+});
+/*弹出修改更新模态框*/
+$(".update_btn").click(function () {
+    var btn_id = $(this).attr("del_id");
+    getArticle(btn_id);
+    $(".confrim-delete").attr("dele-id",btn_id);
+});
+
+//查询文章，显示员工信息
+    function getArticleInfo(id){
+        $.ajax({
+            url:"/admin/article/"+id,
+            type:"GET",
+            success:function(result){
+                //请求得到的信息回显
+                var articleInfo = result.data;
+                $("#article_update_input").val(articleInfo.title);
+                $("#summary_update_input").val(articleInfo.summary);
+            }
+        })
+    }
+
+//查询标签
+
+function getCategory(id){
+        $.ajax({
+            url:"/admin/category/"+id,
+            type:"GET",
+            success:function (result) {
+                //请求得到的信息回显
+                var category = result.data;
+                $("#category_update_input").val(category.name);
+            }
+        })
+}
+
+//查询文章内容
+function getContent(id){
+    $.ajax({
+        url:"/admin/content/"+id,
+        type:"GET",
+        success:function (result) {
+            //请求得到的信息回显
+            var content = result.data;
+            $("#content_update_input").val(content.content);
+        }
+    })
+}
 
 </script>
 <!--script for this page-->

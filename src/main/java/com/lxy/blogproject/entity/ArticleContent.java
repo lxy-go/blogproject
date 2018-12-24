@@ -24,8 +24,8 @@ public class ArticleContent {
     /**
      * 更新时间
      */
-    @Column(name = "modifield_by")
-    private Date modifieldBy;
+    @Column(name = "modified_by")
+    private String modifiedBy;
 
     private String content;
 
@@ -82,19 +82,19 @@ public class ArticleContent {
     /**
      * 获取更新时间
      *
-     * @return modifield_by - 更新时间
+     * @return modified_by - 更新时间
      */
-    public Date getModifieldBy() {
-        return modifieldBy;
+    public String getModifiedBy() {
+        return modifiedBy;
     }
 
     /**
      * 设置更新时间
      *
-     * @param modifieldBy 更新时间
+     * @param modifiedBy 更新时间
      */
-    public void setModifieldBy(Date modifieldBy) {
-        this.modifieldBy = modifieldBy;
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy == null ? null : modifiedBy.trim();
     }
 
     /**

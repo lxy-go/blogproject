@@ -31,7 +31,7 @@ public class ArticleCategory {
      * 更新时间
      */
     @Column(name = "modified_by")
-    private Date modifiedBy;
+    private String modifiedBy;
 
     /**
      * @return id
@@ -106,7 +106,7 @@ public class ArticleCategory {
      *
      * @return modified_by - 更新时间
      */
-    public Date getModifiedBy() {
+    public String getModifiedBy() {
         return modifiedBy;
     }
 
@@ -115,7 +115,7 @@ public class ArticleCategory {
      *
      * @param modifiedBy 更新时间
      */
-    public void setModifiedBy(Date modifiedBy) {
-        this.modifiedBy = modifiedBy;
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy == null ? null : modifiedBy.trim();
     }
 }

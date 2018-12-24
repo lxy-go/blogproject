@@ -43,7 +43,7 @@ public class ArticleInfo {
      * 修改日期
      */
     @Column(name = "modified_by")
-    private Date modifiedBy;
+    private String modifiedBy;
 
     /**
      * 获取主键
@@ -158,7 +158,7 @@ public class ArticleInfo {
      *
      * @return modified_by - 修改日期
      */
-    public Date getModifiedBy() {
+    public String getModifiedBy() {
         return modifiedBy;
     }
 
@@ -167,7 +167,7 @@ public class ArticleInfo {
      *
      * @param modifiedBy 修改日期
      */
-    public void setModifiedBy(Date modifiedBy) {
-        this.modifiedBy = modifiedBy;
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy == null ? null : modifiedBy.trim();
     }
 }

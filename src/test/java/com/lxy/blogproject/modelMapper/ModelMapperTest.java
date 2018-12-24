@@ -12,8 +12,10 @@ public class ModelMapperTest extends ApplicationTests {
     ModelMapper modelMapper;
     @Test
     public void test1(){
-        Student stu = new Student(1, "Lion", "Beijign", 14);
+        Student stu = new Student(1, "Lion", "Beijign", 14,true);
         People people = modelMapper.map(stu, People.class);
         System.out.println(people);
     }
+
+
 }

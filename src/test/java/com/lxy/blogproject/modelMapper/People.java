@@ -5,6 +5,7 @@ public class People {
     public String name;
     public String city;
     public String job;
+    public Boolean isLike;
 
     public int getId() {
         return id;
@@ -30,7 +31,13 @@ public class People {
         this.city = city;
     }
 
+    public Boolean getLike() {
+        return isLike;
+    }
 
+    public void setLike(Boolean like) {
+        isLike = like;
+    }
 
     public String getJob() {
         return job;
@@ -47,6 +54,7 @@ public class People {
                 ", name='" + name + '\'' +
                 ", city='" + city + '\'' +
                 ", job='" + job + '\'' +
+                ", isLike=" + isLike +
                 '}';
     }
 }

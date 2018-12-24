@@ -8,11 +8,11 @@ public class ArticleForm {
 
     private String summary;
 
-    private String category;
+    private String name;
 
     private String content;
 
-    private String modified_by;
+    private String modifiedBy;
 
     private Boolean isTop;
 
@@ -42,12 +42,12 @@ public class ArticleForm {
         this.summary = summary;
     }
 
-    public String getCategory() {
-        return category;
+    public String getName() {
+        return name;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getContent() {
@@ -58,12 +58,13 @@ public class ArticleForm {
         this.content = content;
     }
 
-    public String getModified_by() {
-        return modified_by;
+
+    public String getModifiedBy() {
+        return modifiedBy;
     }
 
-    public void setModified_by(String modified_by) {
-        this.modified_by = modified_by;
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
     }
 
     public Boolean getTop() {

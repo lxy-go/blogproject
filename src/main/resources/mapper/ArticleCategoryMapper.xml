@@ -9,6 +9,6 @@
     <result column="category_id" jdbcType="BIGINT" property="categoryId" />
     <result column="article_id" jdbcType="BIGINT" property="articleId" />
     <result column="create_by" jdbcType="TIMESTAMP" property="createBy" />
-    <result column="modified_by" jdbcType="TIMESTAMP" property="modifiedBy" />
+    <result column="modified_by" jdbcType="VARCHAR" property="modifiedBy" />
   </resultMap>
 </mapper>

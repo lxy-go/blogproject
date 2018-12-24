@@ -4,10 +4,13 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lxy.blogproject.base.ApiResponse;
 import com.lxy.blogproject.dao.ArticleInfoMapper;
-import com.lxy.blogproject.dto.ArticleDTO;
+import com.lxy.blogproject.entity.ArticleCategory;
+import com.lxy.blogproject.entity.ArticleContent;
 import com.lxy.blogproject.entity.ArticleInfo;
+import com.lxy.blogproject.entity.CategoryInfo;
 import com.lxy.blogproject.form.ArticleForm;
 import com.lxy.blogproject.service.ArticleService;
+import com.lxy.blogproject.util.SnowFlake;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,6 +31,8 @@ public class AdminController extends BaseController{
     ArticleInfoMapper articleInfoMapper;
     @Autowired
     ModelMapper modelMapper;
+
+
 
     @GetMapping("/index")
     public String index(){
@@ -58,19 +63,15 @@ public class AdminController extends BaseController{
     @ResponseBody
     public ApiResponse getArticle(@PathVariable("id") Long id){
 
-        ArticleInfo article = articleService.getArticleById(id);
+        ArticleInfo article = articleService.getArticleInfoById(id);
         return ApiResponse.ofSuccess(article);
     }
 
     @PostMapping("/article/add")
     @ResponseBody
     public ApiResponse save(ArticleForm articleForm){
-        Date date = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        String format = dateFormat.format(date);
-        articleForm.setModified_by(format);
-        articleForm.setTraffic(0);
-        articleForm.setTop(false);
+
+
         articleService.save(articleForm);
         return ApiResponse.ofSuccess("insert successs");
     }
@@ -82,9 +83,18 @@ public class AdminController extends BaseController{
         return ApiResponse.ofSuccess("Success");
     }
 
-    @GetMapping("/category")
-    public String category(){
-        return "admin/category";
+    @GetMapping("/category/{id}")
+    @ResponseBody
+    public ApiResponse getCategory(@PathVariable("id") Long id){
+        List<CategoryInfo> categories = articleService.getCategorysByArticleId(id);
+        return ApiResponse.ofSuccess(categories);
+    }
+
+    @GetMapping("/content/{id}")
+    @ResponseBody
+    public ApiResponse getContent(@PathVariable("id") Long id){
+        ArticleContent content = articleService.getContentByArticleId(id);
+        return ApiResponse.ofSuccess(content);
     }
 
     @GetMapping("/comment")
