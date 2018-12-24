@@ -11,6 +11,6 @@
     <result column="is_top" jdbcType="BIT" property="isTop" />
     <result column="traffic" jdbcType="INTEGER" property="traffic" />
     <result column="create_by" jdbcType="TIMESTAMP" property="createBy" />
-    <result column="modified_by" jdbcType="TIMESTAMP" property="modifiedBy" />
+    <result column="modified_by" jdbcType="VARCHAR" property="modifiedBy" />
   </resultMap>
 </mapper>

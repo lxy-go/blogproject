@@ -69,13 +69,4 @@ public class SysView {
     public void setCreateBy(Date createBy) {
         this.createBy = createBy;
     }
-
-    @Override
-    public String toString() {
-        return "SysView{" +
-                "id=" + id +
-                ", ip='" + ip + '\'' +
-                ", createBy=" + createBy +
-                '}';
-    }
 }

@@ -5,13 +5,14 @@ public class Student {
     public String name;
     public String city;
     public int age;
+    public Boolean isLike;
 
-
-    public Student(int id, String name, String city, int age) {
+    public Student(int id, String name, String city, int age,Boolean isLike) {
         this.id = id;
         this.name = name;
         this.city = city;
         this.age = age;
+        this.isLike = isLike;
     }
 
     public int getId() {
@@ -44,5 +45,13 @@ public class Student {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public Boolean getLike() {
+        return isLike;
+    }
+
+    public void setLike(Boolean like) {
+        isLike = like;
     }
 }

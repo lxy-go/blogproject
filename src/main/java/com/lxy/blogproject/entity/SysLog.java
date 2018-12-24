@@ -147,16 +147,4 @@ public class SysLog {
     public void setOperateBy(String operateBy) {
         this.operateBy = operateBy == null ? null : operateBy.trim();
     }
-
-    @Override
-    public String toString() {
-        return "SysLog{" +
-                "id=" + id +
-                ", ip='" + ip + '\'' +
-                ", createBy=" + createBy +
-                ", remark='" + remark + '\'' +
-                ", operateUrl='" + operateUrl + '\'' +
-                ", operateBy='" + operateBy + '\'' +
-                '}';
-    }
 }

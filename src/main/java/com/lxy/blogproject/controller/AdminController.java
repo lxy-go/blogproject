@@ -2,15 +2,23 @@ package com.lxy.blogproject.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.lxy.blogproject.dto.ArticleDTO;
+import com.lxy.blogproject.base.ApiResponse;
+import com.lxy.blogproject.dao.ArticleInfoMapper;
+import com.lxy.blogproject.entity.ArticleCategory;
+import com.lxy.blogproject.entity.ArticleContent;
+import com.lxy.blogproject.entity.ArticleInfo;
+import com.lxy.blogproject.entity.CategoryInfo;
+import com.lxy.blogproject.form.ArticleForm;
 import com.lxy.blogproject.service.ArticleService;
+import com.lxy.blogproject.util.SnowFlake;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -19,6 +27,12 @@ public class AdminController extends BaseController{
 
     @Autowired
     ArticleService articleService;
+    @Autowired
+    ArticleInfoMapper articleInfoMapper;
+    @Autowired
+    ModelMapper modelMapper;
+
+
 
     @GetMapping("/index")
     public String index(){
@@ -30,24 +44,62 @@ public class AdminController extends BaseController{
         return "admin/dashboard";
     }
 
+    /**
+     * 返回文章列表
+     * @param pn
+     * @param model
+     * @return
+     */
     @GetMapping("/article-list")
     public String article(@RequestParam(value="pn",defaultValue="1")Integer pn, Model model){
         PageHelper.startPage(pn,5);
-        List<ArticleDTO> articleDTOList =  articleService.getAllArticleInfo();
-        PageInfo pageInfo = new PageInfo(articleDTOList);
+        List<ArticleInfo> articleInfos = articleInfoMapper.selectAll();
+        PageInfo pageInfo = new PageInfo(articleInfos,5);
         model.addAttribute("articles",pageInfo);
         return "admin/article-list";
     }
 
-    @GetMapping("/category")
-    public String category(){
-        return "admin/category";
+    @GetMapping("/article/{id}")
+    @ResponseBody
+    public ApiResponse getArticle(@PathVariable("id") Long id){
+
+        ArticleInfo article = articleService.getArticleInfoById(id);
+        return ApiResponse.ofSuccess(article);
+    }
+
+    @PostMapping("/article/add")
+    @ResponseBody
+    public ApiResponse save(ArticleForm articleForm){
+
+
+        articleService.save(articleForm);
+        return ApiResponse.ofSuccess("insert successs");
+    }
+
+    @DeleteMapping("/article/{id}")
+    @ResponseBody
+    public ApiResponse delete(@PathVariable("id") Long id){
+        articleService.deleteArticleById(id);
+        return ApiResponse.ofSuccess("Success");
+    }
+
+    @GetMapping("/category/{id}")
+    @ResponseBody
+    public ApiResponse getCategory(@PathVariable("id") Long id){
+        List<CategoryInfo> categories = articleService.getCategorysByArticleId(id);
+        return ApiResponse.ofSuccess(categories);
+    }
+
+    @GetMapping("/content/{id}")
+    @ResponseBody
+    public ApiResponse getContent(@PathVariable("id") Long id){
+        ArticleContent content = articleService.getContentByArticleId(id);
+        return ApiResponse.ofSuccess(content);
     }
 
     @GetMapping("/comment")
     public String comment(){
         return "admin/comment";
     }
-
 
 }

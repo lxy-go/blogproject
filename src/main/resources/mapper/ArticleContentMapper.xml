@@ -8,7 +8,7 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="article_id" jdbcType="BIGINT" property="articleId" />
     <result column="create_by" jdbcType="TIMESTAMP" property="createBy" />
-    <result column="modifield_by" jdbcType="TIMESTAMP" property="modifieldBy" />
+    <result column="modified_by" jdbcType="VARCHAR" property="modifiedBy" />
     <result column="content" jdbcType="LONGVARCHAR" property="content" />
   </resultMap>
 </mapper>
