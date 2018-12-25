@@ -125,6 +125,9 @@ public class ArticleServiceImpl implements ArticleService {
      */
     @Override
     public void deleteArticleById(Long id) {
+        Date date = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String modifyDate = dateFormat.format(date);//更新时间ModifiedBy
 
         ArticleInfo articleInfo = articleInfoMapper.selectByPrimaryKey(id);
         //Entity
@@ -136,15 +139,23 @@ public class ArticleServiceImpl implements ArticleService {
         articleCategory.setArticleId(articleId);
         articleContent.setArticleId(articleId);
 
-        ArticleCategory articleCategorysql = articleCategoryMapper.selectOne(articleCategory);
+        List<ArticleCategory> articleCategories = articleCategoryMapper.select(articleCategory);
         ArticleContent articleContentsql = articleContentMapper.selectOne(articleContent);
-
-        if (articleCategorysql!=null){
+        for (ArticleCategory articleCategorysql : articleCategories) {
             Long categoryId = articleCategorysql.getCategoryId();
             categoryInfo.setId(categoryId);
-            categoryInfoMapper.delete(categoryInfo);
+            CategoryInfo categoryInfosql = categoryInfoMapper.selectOne(categoryInfo);
+            Byte num = categoryInfosql.getNumber();
+            if (num>=1){
+                categoryInfosql.setNumber((byte) (num-1));
+            }else{
+                categoryInfosql.setNumber((byte) 0);
+            }
+            categoryInfosql.setModifiedBy(modifyDate);
+            categoryInfoMapper.updateByPrimaryKeySelective(categoryInfosql);
             articleCategoryMapper.delete(articleCategorysql);
         }
+
         if(articleContentsql!=null){
             articleContentMapper.delete(articleContentsql);
         }
@@ -158,6 +169,81 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public void update(ArticleForm articleForm) {
 
+        ArticleContent articleContent = new ArticleContent();
+        ArticleCategory articleCategory = new ArticleCategory();
+        CategoryInfo categoryInfo = new CategoryInfo();
+
+        Date date = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String modifyDate = dateFormat.format(date);//更新时间ModifiedBy
+        SnowFlake snowFlake = new SnowFlake(2, 3);
+
+        articleForm.setModifiedBy(modifyDate);
+        String categoryNames = articleForm.getName();
+        String[] categoryArr = categoryNames.split(",");
+        //更新文章信息
+        ArticleInfo articleInfo = modelMapper.map(articleForm, ArticleInfo.class);
+        articleInfoMapper.updateByPrimaryKeySelective(articleInfo);
+
+        Long articleId = articleInfo.getId();
+        //更新内容信息
+        articleContent.setArticleId(articleId);
+        ArticleContent articleContentsql = articleContentMapper.selectOne(articleContent);
+        //如果文章内容更新
+        if (!articleContentsql.getContent().equals(articleForm.getContent())){
+            articleContentsql.setContent(articleForm.getContent());
+            articleContentsql.setModifiedBy(articleForm.getModifiedBy());
+            articleContentMapper.updateByPrimaryKeySelective(articleContentsql);
+        }
+        //更新标签，先检查是否更改，如果更改，先删除，后新增
+        String cateNameSQL = "";
+        List<ArticleCategory> articleCategoryList = articleCategoryMapper.select(articleCategory);
+        for (ArticleCategory category : articleCategoryList) {
+            cateNameSQL += categoryInfoMapper.selectByPrimaryKey(category.getCategoryId()).getName()+",";
+        }
+        String categoryNameSQL = cateNameSQL.substring(0, cateNameSQL.length() - 1);
+        //判断是否更新
+        if (!categoryNameSQL.equals(categoryNames)){
+            //先删除标签信息
+            articleCategory.setArticleId(articleId);
+            for (ArticleCategory articleCategorysql : articleCategoryList) {
+                Long categoryId = articleCategorysql.getCategoryId();
+                CategoryInfo categoryInfosql = categoryInfoMapper.selectByPrimaryKey(categoryId);
+                Byte number = categoryInfosql.getNumber();
+                categoryInfosql.setNumber((byte) (number-1));
+                categoryInfoMapper.updateByPrimaryKeySelective(categoryInfosql);
+                articleCategoryMapper.delete(articleCategorysql);
+            }
+            List<CategoryInfo> categoryInfos = categoryInfoMapper.selectAll();
+            ArrayList<String> categoryNameArr = new ArrayList<>();
+            for (CategoryInfo info : categoryInfos) {
+                categoryNameArr.add(info.getName());
+            }
+            for (String categoryName : categoryArr) {
+                long categoryNewId = snowFlake.nextId();
+                long articleCategoryNewId = snowFlake.nextId();
+                if (categoryNameArr.contains(categoryName)){
+                    categoryInfo.setName(categoryName);
+                    CategoryInfo categoryInfosql = categoryInfoMapper.selectOne(categoryInfo);
+                    Byte number1 = categoryInfosql.getNumber();
+                    categoryInfosql.setNumber((byte) (number1+1));
+                    categoryInfoMapper.updateByPrimaryKeySelective(categoryInfosql);
+                    articleCategory.setCategoryId(categoryInfosql.getId());
+
+                }else{
+                    categoryInfo.setId(categoryNewId);
+                    categoryInfo.setName(categoryName);
+                    categoryInfo.setNumber((byte) 1);
+                    categoryInfo.setModifiedBy(modifyDate);
+                    categoryInfoMapper.insert(categoryInfo);
+                    articleCategory.setCategoryId(categoryNewId);
+                }
+                articleCategory.setId(articleCategoryNewId);
+                articleCategory.setArticleId(articleId);
+                articleCategory.setModifiedBy(modifyDate);
+                articleCategoryMapper.insert(articleCategory);
+            }
+        }
     }
 
     /**

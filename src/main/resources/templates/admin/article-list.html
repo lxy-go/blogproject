@@ -98,7 +98,7 @@
                     <div class="form-group">
                         <label  class="control-label">文章内容</label>
                         <div>
-                            <textarea class="form-control" rows="8" name="content"></textarea>
+                            <textarea class="form-control" rows="8" name="content" id="content_update_input"></textarea>
                             <span class="help-block"></span>
                         </div>
                     </div>
@@ -185,14 +185,15 @@
                                         <td th:text="${article.traffic}">12000.00$ </td>
                                         <td th:text="${article.isTop}? 'True' : 'False'"><span class="label label-info label-mini">Due</span></td>
                                         <td>
-                                            <button class="btn btn-primary btn-xs update_btn"   data-toggle="modal" data-target="#articleUpdateModal" th:attr="del_id=${article.id}"><i class="fa fa-pencil"></i></button>
+                                            <button class="btn btn-primary btn-xs update_btn"   data-toggle="modal" data-target="#articleUpdateModal" th:attr="update_id=${article.id}"><i class="fa fa-pencil"></i></button>
                                             <button class="btn btn-danger btn-xs delete_btn" data-toggle="modal" data-target="#deleteModal" th:attr="del_id=${article.id}"><i class="fa fa-trash-o "></i></button>
                                         </td>
                                     </tr>
 
                                     </tbody>
                                 </table>
-                                <ul class="pagination pagination-right">
+                                <ul class="pagination" th:each="">
+
                                     <li><a href="#">&laquo;</a></li>
                                     <li><a href="#">1</a></li>
                                     <li><a href="#">2</a></li>
@@ -201,7 +202,7 @@
                                     <li><a href="#">5</a></li>
                                     <li><a href="#">&raquo;</a></li>
                                 </ul>
-
+                                <p th:text="${'当前显示&nbsp'+ (((articles.pageNum)-1)*(articles.pageSize)+1) +'&nbsp到&nbsp'+ ((!articles.isLastPage)?((articles.pageNum)*(articles.pageSize)):(articles.total)) +'&nbsp条，' + '总计&nbsp'+ articles.total+' &nbsp条数据'}"></p>
                             </div><!-- /content-panel -->
                         </div><!-- /col-md-12 -->
                     </div><!-- /row -->
@@ -232,6 +233,7 @@
 <script src="/static/js/common-scripts.js"></script>
 <script>
 
+
 /*弹出删除模态框*/
 $(".delete_btn").click(function () {
     var btn_id = $(this).attr("del_id");
@@ -261,7 +263,7 @@ $(".confrim-delete").click(function () {
             console.log("删除成功");
         }
     })
-})
+});
 
 /*新增博文*/
 $("#article_add_btn").click(function () {
@@ -279,9 +281,12 @@ $("#article_add_btn").click(function () {
 });
 /*弹出修改更新模态框*/
 $(".update_btn").click(function () {
-    var btn_id = $(this).attr("del_id");
-    getArticle(btn_id);
-    $(".confrim-delete").attr("dele-id",btn_id);
+    var btn_id = $(this).attr("update_id");
+    $("#article_update_btn").attr("update-id",btn_id);
+    getArticleInfo(btn_id);
+    getCategory(btn_id);
+    getContent(btn_id);
+
 });
 
 //查询文章，显示员工信息
@@ -299,15 +304,19 @@ $(".update_btn").click(function () {
     }
 
 //查询标签
-
 function getCategory(id){
+        var categoriesName="";
         $.ajax({
             url:"/admin/category/"+id,
             type:"GET",
             success:function (result) {
                 //请求得到的信息回显
-                var category = result.data;
-                $("#category_update_input").val(category.name);
+                var categories = result.data;
+                $.each(categories,function(i){
+                    categoriesName+=categories[i].name+","
+                });
+                categoriesName = categoriesName.substring(0,categoriesName.length-1)
+                $("#category_update_input").val(categoriesName);
             }
         })
 }
@@ -325,6 +334,21 @@ function getContent(id){
     })
 }
 
+/*更新博文*/
+$("#article_update_btn").click(function () {
+    var id = $(this).attr("update-id");
+    $.ajax({
+        url:"/admin/article/update/"+id,
+        type:"POST",
+        data:$("#articleUpdateModal form").serialize(),
+        success:function (result) {
+            //1.关闭模态框
+            $("#articleUpdateModal").modal("hide");
+
+            location.reload();
+        }
+    })
+});
 </script>
 <!--script for this page-->
 

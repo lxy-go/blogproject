@@ -1,3 +1,4 @@
+/*
 package com.lxy.blogproject.generator;
 
 import org.mybatis.generator.api.MyBatisGenerator;
@@ -43,3 +44,4 @@ public class MybatisGenerator {
 
 
 }
+*/

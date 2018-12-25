@@ -1,3 +1,4 @@
+/*
 package com.lxy.blogproject.util;
 
 import org.mybatis.generator.api.GeneratedXmlFile;
@@ -25,3 +26,4 @@ public class OverlsMergeablePlugin extends PluginAdapter {
         return true;
     }
 }
+*/

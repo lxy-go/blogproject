@@ -2,8 +2,12 @@ package com.lxy.blogproject.mybatis;
 
 import com.lxy.blogproject.ApplicationTests;
 import com.lxy.blogproject.dao.ArticleCategoryMapper;
+import com.lxy.blogproject.dao.ArticleContentMapper;
+import com.lxy.blogproject.dao.ArticleInfoMapper;
 import com.lxy.blogproject.dao.CategoryInfoMapper;
 import com.lxy.blogproject.entity.ArticleCategory;
+import com.lxy.blogproject.entity.ArticleContent;
+import com.lxy.blogproject.entity.ArticleInfo;
 import com.lxy.blogproject.entity.CategoryInfo;
 import com.lxy.blogproject.util.SnowFlake;
 import org.junit.Test;
@@ -11,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 public class MyBatisTest extends ApplicationTests {
 
@@ -18,6 +23,11 @@ public class MyBatisTest extends ApplicationTests {
     CategoryInfoMapper categoryInfoMapper;
     @Autowired
     ArticleCategoryMapper articleCategoryMapper;
+    @Autowired
+    ArticleContentMapper articleContentMapper;
+    @Autowired
+    ArticleInfoMapper articleInfoMapper;
+
 
     @Test
     public void selectLike(){
@@ -61,6 +71,25 @@ public class MyBatisTest extends ApplicationTests {
         CategoryInfo categoryInfo = new CategoryInfo();
 
 
+    }
+    @Test
+    public void deleteAll(){
+        List<ArticleCategory> articleCategories = articleCategoryMapper.selectAll();
+        for (ArticleCategory articleCategory : articleCategories) {
+            articleCategoryMapper.delete(articleCategory);
+        }
+        List<ArticleContent> articleContents = articleContentMapper.selectAll();
+        for (ArticleContent articleContent : articleContents) {
+            articleContentMapper.delete(articleContent);
+        }
+        List<CategoryInfo> categoryInfos = categoryInfoMapper.selectAll();
+        for (CategoryInfo categoryInfo : categoryInfos) {
+            categoryInfoMapper.delete(categoryInfo);
+        }
+        List<ArticleInfo> articleInfos = articleInfoMapper.selectAll();
+        for (ArticleInfo articleInfo : articleInfos) {
+            articleInfoMapper.delete(articleInfo);
+        }
     }
 
 }
