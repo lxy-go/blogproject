@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+    		<meta charset='utf-8'>
+    		<title>Bootstrap 实例 - 默认的导航栏</title>
+    		<link rel='stylesheet' href='https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css'>
+    		<script src='/static/js/jquery-1.8.3.min.js'></script>
+    		<script src='/static/js/bootstrap.min.js'></script>
+    
+    		<style>
+    			body {
+    				font-size: 16px!important;
+    				font-family: '微软雅黑';
+    				/*background-color: cornflowerblue;*/
+    			}
+    			
+    			#top a {
+    				margin: 20px 30px;
+    				color: #000000;
+    			}
+    			
+    			#top a:hover {
+    				color: #000000;
+    				text-decoration: none;
+    				text-underline-style: non;
+    				border-bottom: 2px #000000 solid;
+    				padding-bottom: 10px;
+    			}
+    			
+    			#top {
+    				margin-top: 10px;
+    				text-align: center;
+    				padding-bottom: 10px;
+    				border-bottom: 1px rgb(231, 231, 231) solid;
+    			}
+    			
+    			#logo img {
+    			    z-index: -1;
+    				height: 30px;
+    			}
+    		</style>
+    	</head>
+
+	<body>
+		<nav id='top'>
+    			<span id='logo' style='float: left;margin-left: 10px;'><img src='/static/img/blog-logo.png'/></span>
+    			<a href='index.html'>首页</a>
+    			<a href='blog.html'>博客</a>
+    			<a href='about.html'>关于</a>
+    			<a href='resume.html'>简历</a>
+    			<span id='time' style='float: right;margin-right: 10px;'></span>
+    		</nav>
+	</body>
+	<script>
+		function getCurDate() {
+			var d = new Date();
+			var week;
+			switch(d.getDay()) {
+				case 1:
+					week = '星期一';
+					break;
+				case 2:
+					week = '星期二';
+					break;
+				case 3:
+					week = '星期三';
+					break;
+				case 4:
+					week = '星期四';
+					break;
+				case 5:
+					week = '星期五';
+					break;
+				case 6:
+					week = '星期六';
+					break;
+				default:
+					week = '星期天';
+			}
+			var years = d.getFullYear();
+			var month = add_zero(d.getMonth() + 1);
+			var days = add_zero(d.getDate());
+			var hours = add_zero(d.getHours());
+			var minutes = add_zero(d.getMinutes());
+			var seconds = add_zero(d.getSeconds());
+			var ndate = years + '-' + month + '-' + days + ' ' + hours + ':' + minutes + ':' + seconds + ' ' + week;
+			time.innerHTML = ndate;
+		}
+
+		function add_zero(temp) {
+			if(temp < 10) return '0' + temp;
+			else return temp;
+		}
+
+		setInterval('getCurDate()', 100);
+	</script>
+
+</html>

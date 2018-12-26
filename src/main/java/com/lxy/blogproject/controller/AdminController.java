@@ -4,26 +4,23 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lxy.blogproject.base.ApiResponse;
 import com.lxy.blogproject.dao.ArticleInfoMapper;
-import com.lxy.blogproject.entity.ArticleCategory;
 import com.lxy.blogproject.entity.ArticleContent;
 import com.lxy.blogproject.entity.ArticleInfo;
+import com.lxy.blogproject.entity.ArticlePicture;
 import com.lxy.blogproject.entity.CategoryInfo;
 import com.lxy.blogproject.form.ArticleForm;
 import com.lxy.blogproject.service.ArticleService;
-import com.lxy.blogproject.util.SnowFlake;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
-public class AdminController extends BaseController{
+public class AdminController {
 
     @Autowired
     ArticleService articleService;
@@ -33,34 +30,16 @@ public class AdminController extends BaseController{
     ModelMapper modelMapper;
 
 
-
-    @GetMapping("/index")
-    public String index(){
-        return "admin/index";
-    }
-
-    @GetMapping("dashboard")
-    public String dashboard(){
-        return "admin/dashboard";
-    }
-
-    /**
-     * 返回文章列表
-     * @param pn
-     * @param model
-     * @return
-     */
-    @GetMapping("/article-list")
-    public String article(@RequestParam(value="pn",defaultValue="1")Integer pn, Model model){
-        PageHelper.startPage(pn,5);
+    @GetMapping("/articles")
+    @ResponseBody
+    public PageInfo getAllArticles(){
+        PageHelper.startPage(1,2);
         List<ArticleInfo> articleInfos = articleInfoMapper.selectAll();
         PageInfo pageInfo = new PageInfo(articleInfos,5);
-        model.addAttribute("articles",pageInfo);
-        return "admin/article-list";
+        return pageInfo;
     }
-
-    /**
-     * 根据Id返回文章
+    /**\
+     * 根据ID返回文章ArticleInfo
      * @param id
      * @return
      */
@@ -97,7 +76,7 @@ public class AdminController extends BaseController{
     }
 
     /**
-     * 根据Id获取标签信息
+     * 根据ID查询标签
      * @param id
      * @return
      */
@@ -109,7 +88,7 @@ public class AdminController extends BaseController{
     }
 
     /**
-     * 根据Id获取文章内容信息
+     * 根据ID查询文章内容
      * @param id
      * @return
      */
@@ -120,18 +99,16 @@ public class AdminController extends BaseController{
         return ApiResponse.ofSuccess(content);
     }
 
-    /**
-     * 获取评论
-     * @return
-     */
-    @GetMapping("/comment")
-    public String comment(){
-        return "admin/comment";
+    @GetMapping("/pictureUrl/{id}")
+    @ResponseBody
+    public ApiResponse getPicture(@PathVariable("id") Long id){
+        ArticlePicture articlePicture = articleService.getPictureUrlByArtId(id);
+        return ApiResponse.ofSuccess(articlePicture);
     }
 
-    @PostMapping("/update/{id}")
+    @PostMapping("/article/update/{id}")
     @ResponseBody
-    public ApiResponse updateArticle(@PathVariable("id") Long id, ArticleForm articleForm){
+    public ApiResponse updateArticle(@PathVariable("id") Long id,ArticleForm articleForm){
         articleForm.setId(id);
         articleService.update(articleForm);
         return ApiResponse.ofSuccess("Success");

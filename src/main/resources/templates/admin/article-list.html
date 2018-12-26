@@ -32,7 +32,13 @@
                             <span class="help-block"></span>
                         </div>
                     </div>
-
+                    <div class="form-group">
+                        <label  class="control-label">文章题图</label>
+                        <div >
+                            <input type="text" name="pictureUrl" class="form-control" id="picture_add_input" placeholder="输入链接">
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label  class="control-label">标签类型</label>
                             <div >
@@ -83,6 +89,13 @@
                         <label  class="control-label">文章简介</label>
                         <div >
                             <input type="text" name="summary" class="form-control" id="summary_update_input" placeholder="最多输入100个字">
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label  class="control-label">文章题图</label>
+                        <div >
+                            <input type="text" name="pictureUrl" class="form-control" id="picture_update_input" placeholder="最多输入100个字">
                             <span class="help-block"></span>
                         </div>
                     </div>
@@ -146,7 +159,7 @@
     MAIN SIDEBAR MENU
     *********************************************************************************************************************************************************** -->
     <!--sidebar start-->
-    <aside th:replace="common::commonAside">
+    <aside th:replace="common::commonAside (${'article-list'})">
 
     </aside>
     <!--sidebar end-->
@@ -159,7 +172,7 @@
     <!--main content start-->
     <section id="main-content">
         <section class="wrapper site-min-height">
-            <h3><i class="fa fa-angle-right"></i> Welcome Page</h3>
+            <h3><i class="fa fa-angle-right"></i> BlogList Page</h3>
             <div class="row mt">
                 <div class="col-lg-12">
                     <div class="row mt">
@@ -192,16 +205,21 @@
 
                                     </tbody>
                                 </table>
-                                <ul class="pagination pagination-right">
-                                    <li><a href="#">&laquo;</a></li>
-                                    <li><a href="#">1</a></li>
-                                    <li><a href="#">2</a></li>
-                                    <li><a href="#">3</a></li>
-                                    <li><a href="#">4</a></li>
-                                    <li><a href="#">5</a></li>
-                                    <li><a href="#">&raquo;</a></li>
-                                </ul>
+                                <ul class="pagination">
+                                    <li th:if="${articles.hasPreviousPage}"><a th:href="@{'?pn='+${articles.prePage}}" href="#"> <i class="fa fa-angle-left"></i>&nbsp;上一页</a></li>
+                                    <th:block th:each="nav:${articles.navigatepageNums}">
+                                        <li th:class="${nav==articles.pageNum}?'active':''">
+                                            <a th:href="@{'?pn='+${nav}}" href="#"
+                                            th:text="${nav}"></a>
+                                        </li>
+                                    </th:block>
 
+                                    <li th:if="${articles.hasNextPage}">
+                                        <a th:href="@{'?pn='+${articles.nextPage}}" href="#">下一页 &nbsp;<i class="fa fa-angle-right"></i></a>
+                                    </li>
+
+                                </ul>
+                                <p th:text="${'当前显示&nbsp'+ (((articles.pageNum)-1)*(articles.pageSize)+1) +'&nbsp到&nbsp'+ ((!articles.isLastPage)?((articles.pageNum)*(articles.pageSize)):(articles.total)) +'&nbsp条，' + '总计&nbsp;'+ articles.pages+'&nbsp;页&nbsp;'+articles.total+' &nbsp条数据'}"></p>
                             </div><!-- /content-panel -->
                         </div><!-- /col-md-12 -->
                     </div><!-- /row -->
@@ -232,6 +250,7 @@
 <script src="/static/js/common-scripts.js"></script>
 <script>
 
+
 /*弹出删除模态框*/
 $(".delete_btn").click(function () {
     var btn_id = $(this).attr("del_id");
@@ -261,7 +280,7 @@ $(".confrim-delete").click(function () {
             console.log("删除成功");
         }
     })
-})
+});
 
 /*新增博文*/
 $("#article_add_btn").click(function () {
@@ -280,11 +299,11 @@ $("#article_add_btn").click(function () {
 /*弹出修改更新模态框*/
 $(".update_btn").click(function () {
     var btn_id = $(this).attr("update_id");
-    getArticle(btn_id);
     $("#article_update_btn").attr("update-id",btn_id);
     getArticleInfo(btn_id);
-    getContent(btn_id);
+    getPictureUrl(btn_id);
     getCategory(btn_id);
+    getContent(btn_id);
 
 });
 
@@ -303,20 +322,19 @@ $(".update_btn").click(function () {
     }
 
 //查询标签
-
 function getCategory(id){
-        var categories="";
+        var categoriesName="";
         $.ajax({
             url:"/admin/category/"+id,
             type:"GET",
             success:function (result) {
                 //请求得到的信息回显
-                var category = result.data;
-                $.each(category,function(i){
-                    categories += category[i].name+","
+                var categories = result.data;
+                $.each(categories,function(i){
+                    categoriesName+=categories[i].name+","
                 });
-                categories = categories.substring(0,categories.length-1);
-                $("#category_update_input").val(categories);
+                categoriesName = categoriesName.substring(0,categoriesName.length-1)
+                $("#category_update_input").val(categoriesName);
             }
         })
 }
@@ -334,21 +352,33 @@ function getContent(id){
     })
 }
 
-//点击更改，更新文章
+//查询题图内容
+function getPictureUrl(id){
+        $.ajax({
+            url:"/admin/pictureUrl/"+id,
+            type:"GET",
+            success:function(result){
+                var pictureUrl = result.data;
+                $("#picture_update_input").val(pictureUrl.pictureUrl);
+            }
+        })
+}
+
+/*更新博文*/
 $("#article_update_btn").click(function () {
     var id = $(this).attr("update-id");
     $.ajax({
-        url:"/admin/update/"+id,
+        url:"/admin/article/update/"+id,
         type:"POST",
         data:$("#articleUpdateModal form").serialize(),
-        success:function(result){
+        success:function (result) {
+            //1.关闭模态框
             $("#articleUpdateModal").modal("hide");
+
             location.reload();
-            console.log("更新成功");
         }
     })
 });
-
 </script>
 <!--script for this page-->
 
