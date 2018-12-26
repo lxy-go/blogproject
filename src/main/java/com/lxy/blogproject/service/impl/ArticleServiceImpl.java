@@ -2,10 +2,7 @@ package com.lxy.blogproject.service.impl;
 
 import com.lxy.blogproject.dao.*;
 import com.lxy.blogproject.dto.ArticleDTO;
-import com.lxy.blogproject.entity.ArticleCategory;
-import com.lxy.blogproject.entity.ArticleContent;
-import com.lxy.blogproject.entity.ArticleInfo;
-import com.lxy.blogproject.entity.CategoryInfo;
+import com.lxy.blogproject.entity.*;
 import com.lxy.blogproject.form.ArticleForm;
 import com.lxy.blogproject.service.ArticleService;
 import com.lxy.blogproject.util.SnowFlake;
@@ -47,12 +44,13 @@ public class ArticleServiceImpl implements ArticleService {
         articleForm.setModifiedBy(format);
         CategoryInfo categoryInfo = new CategoryInfo();//标签信息
         ArticleCategory articleCategory = new ArticleCategory();//文章标签关联信息
+        ArticlePicture articlePicture = new ArticlePicture();//文章首页图
         //基本映射
         ArticleInfo articleInfo = modelMapper.map(articleForm, ArticleInfo.class);
         ArticleContent articleContent = modelMapper.map(articleForm, ArticleContent.class);
         SnowFlake snowFlake = new SnowFlake(2, 3);
         long articleId = snowFlake.nextId();
-
+        long pictureId = snowFlake.nextId();
         long contentId = snowFlake.nextId();
 
         articleInfo.setId(articleId);
@@ -85,11 +83,17 @@ public class ArticleServiceImpl implements ArticleService {
             articleCategory.setModifiedBy(articleContent.getModifiedBy());
             articleCategoryMapper.insert(articleCategory);
         }
-
+        articlePicture.setId(pictureId);
+        articlePicture.setArticleId(articleId);
+        articlePicture.setPictureUrl(articleForm.getPictureUrl());
+        articlePicture.setModifiedBy(format);
+        articlePictureMapper.insert(articlePicture);
         //content&article_content
         articleContent.setId(contentId);
         articleContent.setArticleId(articleId);
         articleContentMapper.insert(articleContent);
+
+
     }
 
     /**
@@ -134,13 +138,16 @@ public class ArticleServiceImpl implements ArticleService {
         ArticleCategory articleCategory = new ArticleCategory();
         ArticleContent articleContent = new ArticleContent();
         CategoryInfo categoryInfo = new CategoryInfo();
+        ArticlePicture articlePicture = new ArticlePicture();
 
         Long articleId = articleInfo.getId();
         articleCategory.setArticleId(articleId);
         articleContent.setArticleId(articleId);
+        articlePicture.setArticleId(articleId);
 
         List<ArticleCategory> articleCategories = articleCategoryMapper.select(articleCategory);
         ArticleContent articleContentsql = articleContentMapper.selectOne(articleContent);
+        ArticlePicture articlePicturesql = articlePictureMapper.selectOne(articlePicture);
         for (ArticleCategory articleCategorysql : articleCategories) {
             Long categoryId = articleCategorysql.getCategoryId();
             categoryInfo.setId(categoryId);
@@ -156,8 +163,12 @@ public class ArticleServiceImpl implements ArticleService {
             articleCategoryMapper.delete(articleCategorysql);
         }
 
+
         if(articleContentsql!=null){
             articleContentMapper.delete(articleContentsql);
+        }
+        if (articlePicturesql !=null){
+            articlePictureMapper.delete(articlePicturesql);
         }
         articleInfoMapper.deleteByPrimaryKey(id);
     }
@@ -172,6 +183,7 @@ public class ArticleServiceImpl implements ArticleService {
         ArticleContent articleContent = new ArticleContent();
         ArticleCategory articleCategory = new ArticleCategory();
         CategoryInfo categoryInfo = new CategoryInfo();
+        ArticlePicture articlePicture = new ArticlePicture();
 
         Date date = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -194,6 +206,14 @@ public class ArticleServiceImpl implements ArticleService {
             articleContentsql.setContent(articleForm.getContent());
             articleContentsql.setModifiedBy(articleForm.getModifiedBy());
             articleContentMapper.updateByPrimaryKeySelective(articleContentsql);
+        }
+        //更新题图信息
+        articlePicture.setArticleId(articleId);
+        ArticlePicture articlePicture1sql = articlePictureMapper.selectOne(articlePicture);
+        if (!articlePicture1sql.getPictureUrl().equals(articleForm.getPictureUrl())){
+            articlePicture1sql.setPictureUrl(articleForm.getPictureUrl());
+            articlePicture1sql.setModifiedBy(modifyDate);
+            articlePictureMapper.updateByPrimaryKeySelective(articlePicture1sql);
         }
         //更新标签，先检查是否更改，如果更改，先删除，后新增
         String cateNameSQL = "";
@@ -279,4 +299,43 @@ public class ArticleServiceImpl implements ArticleService {
         return articleContentsql;
     }
 
+    @Override
+    public ArticlePicture getPictureUrlByArtId(Long id) {
+        ArticlePicture articlePicture = new ArticlePicture();
+        articlePicture.setArticleId(id);
+        ArticlePicture articlePicturesql = articlePictureMapper.selectOne(articlePicture);
+        return articlePicturesql;
+    }
+
+    @Override
+    public List<ArticleDTO> getLastArticle() {
+        ArticleDTO articleDTO = new ArticleDTO();
+        ArrayList<ArticleDTO> articleDTOList = new ArrayList<>();
+
+        ArticlePicture articlePicture = new ArticlePicture();
+        CategoryInfo categoryInfo = new CategoryInfo();
+        ArticleCategory articleCategory = new ArticleCategory();
+        ArticleContent articleContent = new ArticleContent();
+
+        List<ArticleInfo> lastArticle = articleInfoMapper.getLastArticle();
+        for (ArticleInfo articleInfo : lastArticle) {
+            Long articleId = articleInfo.getId();
+            articleCategory.setArticleId(articleId);
+            articlePicture.setArticleId(articleId);
+            articleContent.setArticleId(articleId);
+
+            List<ArticleCategory> articleCategoryList = articleCategoryMapper.select(articleCategory);
+            String categoryName = "";
+            for (ArticleCategory articleCategorysql : articleCategoryList) {
+                CategoryInfo categoryInfosql = categoryInfoMapper.selectByPrimaryKey(articleCategorysql.getCategoryId());
+                categoryName = categoryInfosql.getName()+",";
+            }
+            categoryName = categoryName.substring(0, categoryName.length()-1);
+            ArticleContent articleContentsql = articleContentMapper.selectOne(articleContent);
+            articleDTO.setCategoryName(categoryName);
+            articleDTO.setId(articleId);
+            articleDTO.setContent(articleContentsql.getContent());
+        }
+        return null;
+    }
 }

@@ -92,4 +92,12 @@ public class MyBatisTest extends ApplicationTests {
         }
     }
 
+    @Test
+    public void selfMapper(){
+        List<ArticleInfo> lastArticle = articleInfoMapper.getLastArticle();
+        for (ArticleInfo articleInfo : lastArticle) {
+            System.out.println(articleInfo.getId());
+
+        }
+    }
 }

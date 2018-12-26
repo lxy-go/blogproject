@@ -14,19 +14,13 @@ public class ArticleDTO {
     private Date createBy;          // 文章创建时间
 
     // tbl_article_content基础字段
-    private Long articleContentId;  // ArticleContent表主键
     private String content;         // 文章内容
 
     // tbl_category_info基础字段
-    private Long categoryId;        // 分类ID
     private String categoryName;    // 分类名称
+
     private Byte categoryNumber;    // 分类对应的数量
 
-    // tbl_article_category基础字段
-    private Long articleCategoryId; // ArticleCategory表主键
-
-    // tbl_article_picture基础字段
-    private Long articlePictureId;  // ArticlePicture表主键
     private String pictureUrl;      // 文章题图url
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
@@ -78,13 +72,6 @@ public class ArticleDTO {
         this.createBy = createBy;
     }
 
-    public Long getArticleContentId() {
-        return articleContentId;
-    }
-
-    public void setArticleContentId(Long articleContentId) {
-        this.articleContentId = articleContentId;
-    }
 
     public String getContent() {
         return content;
@@ -94,13 +81,6 @@ public class ArticleDTO {
         this.content = content;
     }
 
-    public Long getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
-    }
 
     public String getCategoryName() {
         return categoryName;
@@ -116,22 +96,6 @@ public class ArticleDTO {
 
     public void setCategoryNumber(Byte categoryNumber) {
         this.categoryNumber = categoryNumber;
-    }
-
-    public Long getArticleCategoryId() {
-        return articleCategoryId;
-    }
-
-    public void setArticleCategoryId(Long articleCategoryId) {
-        this.articleCategoryId = articleCategoryId;
-    }
-
-    public Long getArticlePictureId() {
-        return articlePictureId;
-    }
-
-    public void setArticlePictureId(Long articlePictureId) {
-        this.articlePictureId = articlePictureId;
     }
 
     public String getPictureUrl() {

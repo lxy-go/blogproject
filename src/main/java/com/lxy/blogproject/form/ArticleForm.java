@@ -18,6 +18,8 @@ public class ArticleForm {
 
     private Integer traffic;
 
+    private String pictureUrl;
+
     public Long getId() {
         return id;
     }
@@ -81,5 +83,13 @@ public class ArticleForm {
 
     public void setTraffic(Integer traffic) {
         this.traffic = traffic;
+    }
+
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
     }
 }

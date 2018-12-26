@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="commonHead">
+    <meta charset="utf-8" />
+    <title>LXY个人博客</title>
+    <script src="/static/js/jquery.js"></script>
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
+    <script src="/static/js/bootstrap.min.js"></script>
+    <link href="/static/css/index.css" rel="stylesheet">
+</head>
+<body>
+<nav  th:fragment="commonNav" id='top'>
+    <span id='logo' style='float: left;margin-left: 10px;'><img src='/static/img/blog-logo.png'/></span>
+    <a href='index.html'>首页</a>
+    <a href='blog.html'>博客</a>
+    <a href='about.html'>关于</a>
+    <a href='resume.html'>简历</a>
+    <span id='time' style='float: right;margin-right: 10px;'></span>
+</nav>
+</body>
+</html>
