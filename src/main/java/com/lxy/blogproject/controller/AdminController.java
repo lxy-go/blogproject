@@ -10,6 +10,7 @@ import com.lxy.blogproject.entity.ArticlePicture;
 import com.lxy.blogproject.entity.CategoryInfo;
 import com.lxy.blogproject.form.ArticleForm;
 import com.lxy.blogproject.service.ArticleService;
+import com.lxy.blogproject.util.MarkDown2HtmlUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,7 +34,7 @@ public class AdminController {
     @GetMapping("/articles")
     @ResponseBody
     public PageInfo getAllArticles(){
-        PageHelper.startPage(1,2);
+        PageHelper.startPage(1,5);
         List<ArticleInfo> articleInfos = articleInfoMapper.selectAll();
         PageInfo pageInfo = new PageInfo(articleInfos,5);
         return pageInfo;
@@ -96,6 +97,7 @@ public class AdminController {
     @ResponseBody
     public ApiResponse getContent(@PathVariable("id") Long id){
         ArticleContent content = articleService.getContentByArticleId(id);
+//        content.setContent(MarkDown2HtmlUtil.markdown2html(content.getContent()));
         return ApiResponse.ofSuccess(content);
     }
 

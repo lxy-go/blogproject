@@ -79,27 +79,3 @@ body {
 }
 
 
-#top a {
-    margin: 20px 30px;
-    color: #000000;
-}
-
-#top a:hover {
-    color: #000000;
-    text-decoration: none;
-    text-underline-style: non;
-    border-bottom: 2px #000000 solid;
-    padding-bottom: 10px;
-}
-
-#top {
-    margin-top: 10px;
-    text-align: center;
-    padding-bottom: 10px;
-    border-bottom: 1px rgb(231, 231, 231) solid;
-}
-
-#logo img {
-    z-index: -1;
-    height: 30px;
-}

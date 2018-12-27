@@ -1,8 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:http="http://www.w3.org/1999/xhtml">
 <head th:replace="base::commonHead">
 </head>
-
+<head>
+    <!--引入起始页css-->
+    <link href="/static/css/index.css" rel="stylesheet">
+    <link href="/static/css/header.css" rel="stylesheet">
+</head>
 <body>
 
 <!--引入头部-->
@@ -11,19 +15,19 @@
 <div id="content">
     <!--文章大题图-->
     <div id="articlePicture">
-        <img  src="http://ww1.sinaimg.cn/large/007cp8xely1fyk35o8qwsj31hc0u0u0x.jpg">
+        <img src="" />
     </div>
 
     <!--文章信息-->
     <div id="articleInfo">
         <!--文章标题-->
         <div>
-            <h1 id="articleTitle" th:text="${lastArticles[0].title}">xxx</h1>
+            <h1 id="articleTitle" >xxx</h1>
         </div>
 
         <!--文章简介-->
         <div>
-            <h4 id="articleSummary" th:text="${lastArticles[0].summary}">xxxxxx</h4>
+            <h4 id="articleSummary" >xxxxxx</h4>
         </div>
 
         <!--查看文章按钮-->
@@ -33,19 +37,19 @@
     <!--右下角的题图-->
     <div class="smallArticlePictures">
         <div class="smallPictures">
-            <img src="" picturelUrl="" location="0" articleId="" title="" summary=""  th:src="@{${lastArticles[1].pictureUrl}}"/>
+            <img src="" picturelUrl="" location="0" articleId="" title="" summary=""  />
         </div>
         <div class="smallPictures">
-            <img src="http://ww1.sinaimg.cn/large/007cp8xely1fyk32xw8l1j31400p0n2u.jpg" picturelUrl="" location="1" articleId="" title="" summary="" th:src="@{${lastArticles[2].pictureUrl}}"/>
+            <img src="" picturelUrl="" location="1" articleId="" title="" summary="" />
         </div>
         <div class="smallPictures">
-            <img src="http://ww1.sinaimg.cn/large/007cp8xely1fyk339a5b7j30dc078dgl.jpg" picturelUrl="" location="2" articleId="" title="" summary="" th:src="@{${lastArticles[3].pictureUrl}}"/>
+            <img src="" picturelUrl="" location="2" articleId="" title="" summary="" />
         </div>
         <div class="smallPictures">
-            <img src="http://ww1.sinaimg.cn/large/007cp8xely1fyk33tkfukj31hc0u0u0x.jpg" picturelUrl="" location="3" articleId="" title="" summary="" th:src="@{${lastArticles[4].pictureUrl}}"/>
+            <img src="" picturelUrl="" location="3" articleId="" title="" summary="" />
         </div>
         <div class="smallPictures">
-            <img src="http://ww1.sinaimg.cn/large/007cp8xely1fyk34ai7wdj30fa08l3zr.jpg" picturelUrl="" location="4" articleId="" title="" summary="" />
+            <img src="" picturelUrl="" location="4" articleId="" title="" summary="" />
         </div>
     </div>
 
@@ -68,8 +72,89 @@
 </div>
 
 </body>
+<script>
+    // 页面初始化：填充数据
+    window.onload = function() {
+        $.ajax({
+            url: "/api/article/list/lastest",
+            type: "GET",
+            success: function(json) {
+                console.log(json);
+                $.each(json.data, function(i, item) {
+                    // 设置右下角题图的内容
+                    $(".smallPictures img[location=" + i + "]").attr("src", item.pictureUrl);
+                    $(".smallPictures img[location=" + i + "]").attr("pictureUrl", item.pictureUrl);
+                    $(".smallPictures img[location=" + i + "]").attr("articleId", item.id);
+                    $(".smallPictures img[location=" + i + "]").attr("title", item.title);
+                    $(".smallPictures img[location=" + i + "]").attr("summary", item.summary);
 
-<!--引入index页面的JS-->
+                    // 默认显示第一篇文章的信息
+                    if(i == "0") {
+                        $("#articleTitle").html(item.title);
+                        $("#articleSummary").html(item.summary);
+                        $("#articlePicture img").attr("src", item.pictureUrl);
+                        $("#showArticle").attr("articleId", item.id);
+                    }
+                });
+            }
+        });
+    };
+
+    // 按钮点击进行文章详情页
+    $("#showArticle").click(function() {
+        var articleId = $(this).attr("articleId");
+        var url = "article/"+ articleId;
+        window.location.href = url;
+    });
+
+    // 测试使用的函数
+    // $("#showArticle").click(function() {
+    // 	$.ajax({
+    // 		url: "http://10.2.3.235:80/api/article/1",
+    // 		type: "GET",
+    // 		dataType: "json",
+    // 		success: function(json) {
+    // 			$("#articleTitle").html(json.title);
+    // 			$("#articleSummary").html(json.summary);
+    // 		}
+    // 	})
+    // });
+
+    // 缩略图鼠标进入事件：更换大图和按钮的articleId
+    $(".smallPictures img").mouseenter(function() {
+        var pictureUrl = $(this).attr("pictureUrl");
+        var articleId = $(this).attr("articleId")
+        var title = $(this).attr("title");
+        var summary = $(this).attr("summary");
+        $("#articlePicture img").attr("src", pictureUrl);
+        $("#showArticle").attr("articleId", articleId);
+        $("#articleTitle").html(title);
+        $("#articleSummary").html(summary);
+    });
+
+    // function checkPicurl(url) {
+    // 	var img = new Image();
+    // 	img.src = url;
+    // 	img.onerror = function() {
+    // 		alert(name + " 图片加载失败，请检查url是否正确");
+    // 		return false;
+    // 	};
+    //
+    // 	if(img.complete) {
+    // 		console.log(img.width + " " + img.height);
+    // 	} else {
+    // 		img.onload = function() {
+    // 			console.log(img.width + " " + img.height);
+    // 			img.onload = null;
+    // 			//避免重复加载
+    // 		}
+    // 	}
+    // }
+
+</script>
+<!--
+引入index页面的JS
 <script language="javascript" type="text/javascript" src="/static/js/index.js"></script>
+-->
 
 </html>

@@ -14,6 +14,6 @@
     <result column="modified_by" jdbcType="VARCHAR" property="modifiedBy" />
   </resultMap>
   <select id="getLastArticle" resultMap="BaseResultMap">
-    select id,title,summary,is_top,traffic,create_by,modified_by from tbl_article_info ORDER BY id desc limit 0,5;
+    select id,title,summary,is_top,traffic,create_by,modified_by from tbl_article_info ORDER BY id desc limit 0,6;
   </select>
 </mapper>

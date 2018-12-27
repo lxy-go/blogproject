@@ -1,14 +1,8 @@
 package com.lxy.blogproject.mybatis;
 
 import com.lxy.blogproject.ApplicationTests;
-import com.lxy.blogproject.dao.ArticleCategoryMapper;
-import com.lxy.blogproject.dao.ArticleContentMapper;
-import com.lxy.blogproject.dao.ArticleInfoMapper;
-import com.lxy.blogproject.dao.CategoryInfoMapper;
-import com.lxy.blogproject.entity.ArticleCategory;
-import com.lxy.blogproject.entity.ArticleContent;
-import com.lxy.blogproject.entity.ArticleInfo;
-import com.lxy.blogproject.entity.CategoryInfo;
+import com.lxy.blogproject.dao.*;
+import com.lxy.blogproject.entity.*;
 import com.lxy.blogproject.util.SnowFlake;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +21,8 @@ public class MyBatisTest extends ApplicationTests {
     ArticleContentMapper articleContentMapper;
     @Autowired
     ArticleInfoMapper articleInfoMapper;
+    @Autowired
+    ArticlePictureMapper articlePictureMapper;
 
 
     @Test
@@ -90,6 +86,10 @@ public class MyBatisTest extends ApplicationTests {
         for (ArticleInfo articleInfo : articleInfos) {
             articleInfoMapper.delete(articleInfo);
         }
+        List<ArticlePicture> articlePictures = articlePictureMapper.selectAll();
+        for (ArticlePicture articlePicture : articlePictures) {
+            articlePictureMapper.delete(articlePicture);
+        }
     }
 
     @Test
@@ -97,7 +97,7 @@ public class MyBatisTest extends ApplicationTests {
         List<ArticleInfo> lastArticle = articleInfoMapper.getLastArticle();
         for (ArticleInfo articleInfo : lastArticle) {
             System.out.println(articleInfo.getId());
-
         }
     }
+
 }

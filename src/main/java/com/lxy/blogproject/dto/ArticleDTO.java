@@ -1,11 +1,14 @@
 package com.lxy.blogproject.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
 import java.util.Date;
 
 public class ArticleDTO {
     // tbl_article_info基础字段
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;                // 主键
     private String title;           // 文章标题
     private String summary;         // 文章简介

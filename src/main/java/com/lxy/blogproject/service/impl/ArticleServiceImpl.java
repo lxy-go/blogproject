@@ -1,6 +1,7 @@
 package com.lxy.blogproject.service.impl;
 
 import com.lxy.blogproject.dao.*;
+import com.lxy.blogproject.dto.ArticleCommentDTO;
 import com.lxy.blogproject.dto.ArticleDTO;
 import com.lxy.blogproject.entity.*;
 import com.lxy.blogproject.form.ArticleForm;
@@ -29,7 +30,11 @@ public class ArticleServiceImpl implements ArticleService {
     ArticlePictureMapper articlePictureMapper;
     @Autowired
     CategoryInfoMapper categoryInfoMapper;
+    @Autowired
+    CommentMapper commentMapper;
 
+    @Autowired
+    ArticleCommentMapper articleCommentMapper;
 
     /**
      * 新增文章
@@ -217,6 +222,7 @@ public class ArticleServiceImpl implements ArticleService {
         }
         //更新标签，先检查是否更改，如果更改，先删除，后新增
         String cateNameSQL = "";
+        articleCategory.setArticleId(articleId);
         List<ArticleCategory> articleCategoryList = articleCategoryMapper.select(articleCategory);
         for (ArticleCategory category : articleCategoryList) {
             cateNameSQL += categoryInfoMapper.selectByPrimaryKey(category.getCategoryId()).getName()+",";
@@ -299,6 +305,11 @@ public class ArticleServiceImpl implements ArticleService {
         return articleContentsql;
     }
 
+    /**
+     * 根据ID获取图片
+     * @param id
+     * @return
+     */
     @Override
     public ArticlePicture getPictureUrlByArtId(Long id) {
         ArticlePicture articlePicture = new ArticlePicture();
@@ -307,6 +318,10 @@ public class ArticleServiceImpl implements ArticleService {
         return articlePicturesql;
     }
 
+    /**
+     * 获取最新的文章，用于前台页面返回
+     * @return
+     */
     @Override
     public List<ArticleDTO> getLastArticle() {
         ArrayList<ArticleDTO> articleDTOList = new ArrayList<>();
@@ -341,5 +356,67 @@ public class ArticleServiceImpl implements ArticleService {
             articleDTOList.add(articleDTO);
         }
         return articleDTOList;
+    }
+
+    /**
+     * 根据ID返回文章
+     * @param articleId
+     * @return
+     */
+    @Override
+    public ArticleDTO getArticleById(Long articleId) {
+
+        ArticleInfo articleInfo = new ArticleInfo();
+        ArticleCategory articleCategory = new ArticleCategory();
+        CategoryInfo categoryInfo = new CategoryInfo();
+        ArticleContent articleContent = new ArticleContent();
+        ArticlePicture articlePicture = new ArticlePicture();
+
+        articleInfo.setId(articleId);
+        articleCategory.setArticleId(articleId);
+        articleContent.setArticleId(articleId);
+        articlePicture.setArticleId(articleId);
+
+        ArticleInfo articleInfosql = articleInfoMapper.selectOne(articleInfo);
+        List<ArticleCategory> articleCategoryList = articleCategoryMapper.select(articleCategory);
+        String categoryName = "";
+        for (ArticleCategory articleCategorysql : articleCategoryList) {
+            CategoryInfo categoryInfosql = categoryInfoMapper.selectByPrimaryKey(articleCategorysql.getCategoryId());
+            categoryName += categoryInfosql.getName()+",";
+        }
+        if (categoryName.length()!=0){
+            categoryName = categoryName.substring(0, categoryName.length()-1);
+        }
+        ArticleContent articleContentsql = articleContentMapper.selectOne(articleContent);
+        ArticlePicture articlePicturesql = articlePictureMapper.selectOne(articlePicture);
+        ArticleDTO articleDTO = modelMapper.map(articleInfosql, ArticleDTO.class);
+
+        articleDTO.setCategoryName(categoryName);
+        articleDTO.setContent(articleContentsql.getContent());
+        articleDTO.setPictureUrl(articlePicturesql.getPictureUrl());
+
+        return articleDTO;
+    }
+
+    /**
+     * 根据ID返回评论
+     * @param id
+     * @return
+     */
+    @Override
+    public List<ArticleCommentDTO> getComment(Long id) {
+        ArrayList<ArticleCommentDTO> articleCommentDTOList = new ArrayList<>();
+        ArticleComment articleComment = new ArticleComment();
+        Comment comment = new Comment();
+        articleComment.setArticleId(id);
+        List<ArticleComment> articleCommentList = articleCommentMapper.select(articleComment);
+        for (ArticleComment articleCommentsql : articleCommentList) {
+            Comment commentsql = commentMapper.selectByPrimaryKey(articleCommentsql.getCommentId());
+            ArticleCommentDTO articleCommentDTO = modelMapper.map(commentsql, ArticleCommentDTO.class);
+            articleCommentDTO.setArticleCommentId(articleComment.getCommentId());
+            articleCommentDTO.setArticleId(articleComment.getArticleId());
+            articleCommentDTOList.add(articleCommentDTO);
+        }
+        return articleCommentDTOList;
     }
 }

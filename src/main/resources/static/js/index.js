@@ -1,11 +1,12 @@
 // 页面初始化：填充数据
 window.onload = function() {
 	$.ajax({
-		url: "http://10.2.3.235:80/api/article/list/lastest",
+		url: "/api/article/list/lastest",
 		type: "GET",
-		dataType: "json",
+		datatype:json,
 		success: function(json) {
-			$.each(json, function(i, item) {
+			console.log(json);
+			$.each(json.data, function(i, item) {
 				// 设置右下角题图的内容
 				$(".smallPictures img[location=" + i + "]").attr("src", item.pictureUrl);
 				$(".smallPictures img[location=" + i + "]").attr("pictureUrl", item.pictureUrl);
@@ -48,7 +49,7 @@ $("#showArticle").click(function() {
 // 缩略图鼠标进入事件：更换大图和按钮的articleId
 $(".smallPictures img").mouseenter(function() {
 	var pictureUrl = $(this).attr("pictureUrl");
-	var articleId = $(this).attr("articleId")
+	var articleId = $(this).attr("articleId");
 	var title = $(this).attr("title");
 	var summary = $(this).attr("summary");
 	$("#articlePicture img").attr("src", pictureUrl);

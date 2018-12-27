@@ -1,5 +1,6 @@
 package com.lxy.blogproject.service;
 
+import com.lxy.blogproject.dto.ArticleCommentDTO;
 import com.lxy.blogproject.dto.ArticleDTO;
 import com.lxy.blogproject.entity.*;
 import com.lxy.blogproject.form.ArticleForm;
@@ -25,4 +26,8 @@ public interface ArticleService {
     public void update(ArticleForm articleForm);
 
     public List<ArticleDTO> getLastArticle();
+
+    public ArticleDTO getArticleById(Long articleId);
+
+    public List<ArticleCommentDTO> getComment(Long id);
 }
