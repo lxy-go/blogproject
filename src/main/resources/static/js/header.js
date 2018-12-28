@@ -46,7 +46,7 @@ document.writeln("	<body>");
 document.writeln("		<nav id=\'top\'>");
 document.writeln("			<span id=\'logo\' style=\'float: left;margin-left: 10px;\'><img src=\'/static/img/blog-logo.png\'/></span>");
 document.writeln("			<a href=\'index.html\'>首页</a>");
-document.writeln("			<a href=\'blog.html\'>博客</a>");
+document.writeln("			<a href=\'blog-list.html\'>博客</a>");
 document.writeln("			<a href=\'about.html\'>关于</a>");
 document.writeln("			<a href=\'resume.html\'>简历</a>");
 document.writeln("			<span id=\'time\' style=\'float: right;margin-right: 10px;\'></span>");

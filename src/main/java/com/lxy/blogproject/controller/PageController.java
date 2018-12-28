@@ -2,7 +2,6 @@ package com.lxy.blogproject.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.lxy.blogproject.base.ApiResponse;
 import com.lxy.blogproject.dao.ArticleInfoMapper;
 import com.lxy.blogproject.dto.ArticleDTO;
 import com.lxy.blogproject.entity.ArticleInfo;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -78,5 +76,13 @@ public class PageController {
         return "article";
     }
 
+    @GetMapping("/blogs")
+    public String getBlog(@RequestParam(value="pn",defaultValue="1")Integer pn, Model model){
+        PageHelper.startPage(pn,5);
+        List<ArticleInfo> articleInfos = articleInfoMapper.selectAll();
+        PageInfo pageInfo = new PageInfo(articleInfos,5);
+        model.addAttribute("blogs",pageInfo);
+        return "blog-list";
+    }
 
 }

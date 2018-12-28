@@ -33,9 +33,9 @@ hr {
     margin: 10px auto;
 }
 
-p {
+/*p {
     margin: 15px 5px !important;
-}
+}*/
 
 table,
 pre,
@@ -56,27 +56,27 @@ li {
     margin: 5px;
 }
 
-lip {
+li p {
     margin: 5px 0 !important;
 }
 
-ulul,
-ulol,
-olul,
-olol {
+ul ul,
+ul ol,
+ol ul,
+ol ol {
     margin: 0;
     padding-left: 10px;
 }
 
-olol,
-ulol {
+ol ol,
+ul ol {
     list-style-type: lower-roman;
 }
 
-ululol,
-ulolol,
-olulol,
-ololol {
+ul ul ol,
+ul ol ol,
+ol ul ol,
+ol ol ol {
     list-style-type: lower-alpha;
 }
 
@@ -84,13 +84,13 @@ dl {
     padding: 0;
 }
 
-dldt {
+dl dt {
     font-size: 1em;
     font-weight: bold;
     font-style: italic;
 }
 
-dldd {
+dl dd {
     margin: 0 0 10px;
     padding: 0 10px;
 }
@@ -162,7 +162,7 @@ tbody {
     border: 0;
 }
 
-tabletr {
+table tr {
     border: 0;
     border-top: 1px solid #CCC;
     background-color: white;
@@ -170,19 +170,19 @@ tabletr {
     padding: 0;
 }
 
-tabletr:nth-child(2n) {
+table tr:nth-child(2n) {
     background-color: #F8F8F8;
 }
 
-tabletrth,
-tabletrtd {
+table tr th,
+table tr td {
     font-size: 16px;
     border: 1px solid #CCC;
     margin: 0;
     padding: 5px 10px;
 }
 
-tabletrth {
+table tr th {
     font-weight: bold;
     background-color: #F0F0F0;
 }
@@ -246,12 +246,21 @@ img {
 
 .commentName {
     padding-top: 10px;
+
 }
 
-.commentTime {
-    padding-top: 10px;
-    float: right;
+.commentName:before{
+    content: '';
+    display: inline-block;
+    height: 14px;
+    width: 20px;
+    background: url('/static/img/icon_comment.gif') no-repeat;/*兼容没测*/
+
 }
+.commentName:after {
+    content: ":";
+}
+
 
 .commentContent {
     margin-top: 5px;
@@ -260,4 +269,8 @@ img {
 .comments {
     padding-bottom: 5px;
     border-bottom: 2px rgb(231, 231, 231) dashed;
+}
+
+.comment p {
+    margin: 5px 5px;
 }

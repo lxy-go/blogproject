@@ -1,5 +1,7 @@
 package com.lxy.blogproject.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 public class ArticleCommentDTO {
@@ -9,6 +11,7 @@ public class ArticleCommentDTO {
     private String name;            // 用户自定义的显示名称
     private String email;
     private String ip;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
     private Date createBy;          // 创建时间
 
     // tbl_article_comment基础字段
