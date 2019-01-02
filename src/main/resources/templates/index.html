@@ -5,7 +5,7 @@
 <head>
     <!--引入起始页css-->
     <link href="/static/css/index.css" rel="stylesheet">
-    <link href="/static/css/header.css" rel="stylesheet">
+
 </head>
 <body>
 
@@ -107,23 +107,11 @@
         window.location.href = url;
     });
 
-    // 测试使用的函数
-    // $("#showArticle").click(function() {
-    // 	$.ajax({
-    // 		url: "http://10.2.3.235:80/api/article/1",
-    // 		type: "GET",
-    // 		dataType: "json",
-    // 		success: function(json) {
-    // 			$("#articleTitle").html(json.title);
-    // 			$("#articleSummary").html(json.summary);
-    // 		}
-    // 	})
-    // });
 
     // 缩略图鼠标进入事件：更换大图和按钮的articleId
     $(".smallPictures img").mouseenter(function() {
         var pictureUrl = $(this).attr("pictureUrl");
-        var articleId = $(this).attr("articleId")
+        var articleId = $(this).attr("articleId");
         var title = $(this).attr("title");
         var summary = $(this).attr("summary");
         $("#articlePicture img").attr("src", pictureUrl);
@@ -132,24 +120,6 @@
         $("#articleSummary").html(summary);
     });
 
-    // function checkPicurl(url) {
-    // 	var img = new Image();
-    // 	img.src = url;
-    // 	img.onerror = function() {
-    // 		alert(name + " 图片加载失败，请检查url是否正确");
-    // 		return false;
-    // 	};
-    //
-    // 	if(img.complete) {
-    // 		console.log(img.width + " " + img.height);
-    // 	} else {
-    // 		img.onload = function() {
-    // 			console.log(img.width + " " + img.height);
-    // 			img.onload = null;
-    // 			//避免重复加载
-    // 		}
-    // 	}
-    // }
 
 </script>
 <!--

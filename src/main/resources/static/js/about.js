@@ -1,7 +1,7 @@
 window.onload = function () {
     // 获取留言信息
     $.ajax({
-        url: "http://10.2.3.235:80/api/comment/list",
+        url: "/api/comment/list",
         type: "GET",
         dataType: "json",
         success: function (json) {
@@ -35,10 +35,10 @@ $('#addComment').click(function () {
         name: name,
         email: email,
         content: content
-    }
+    };
     // 提交AJAX请求
     $.ajax({
-        url: "http://10.2.3.235:80/api/comment/",
+        url: "/api/comment/",
         type: "POST",
         dataType: "json",
         contentType: "application/json;charset=utf-8",

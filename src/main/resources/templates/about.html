@@ -1,50 +1,69 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" >
-<head th:replace="base::commonHead">
-</head>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="base::commonHead" ></head>
 <head>
-    <!--引入文章css-->
-    <link href="/static/css/article.css" rel="stylesheet">
+    <!-- 引入自己的CSS -->
+    <link href="/static/css/about.css" rel="stylesheet"/>
 </head>
 <body>
+
+
 <!--引入头部-->
 <nav th:replace="base::commonNav"></nav>
-
+<!--主体内容-->
 <div id="content">
-    <!--返回按钮-->
-    <div id="backBtn">
-        <label onclick="history.go(-1)"><span class="glyphicon glyphicon-chevron-left"></span> Get Back</label>
-    </div>
 
-    <!--文章标题-->
-    <div>
-        <h1 id="articleTitle" th:text="${article.title}">这里是文章的标题</h1>
+    <!-- 关于信息 -->
+    <div class="aboutInfo">
+        <div class="leftInfo">
+            <img src="/static/img/head.jpg">
+            <h2>我没有三颗心脏</h2>
+            <h4>wmyskxz</h4>
+            <h4>AB型摩羯it男爱文艺爱音乐</h4>
+        </div>
+        <div class="rightInfo">
+            <h2>博客搭建流程：</h2>
+            <div class="aboutArticle">
+                <div class="title">
+                    <a href="https://www.jianshu.com/p/0293368fe750">SpringBoot技术栈搭建个人博客【项目准备】</a>
+                </div>
+                <div class="summary">
+                    项目准备包括需求分析、数据库设计、原型设计、项目搭建、RESTful APIs设计
+                </div>
+            </div>
+            <div class="aboutArticle">
+                <div class="title">
+                    <a href="https://www.jianshu.com/p/91c6c9fc67c4">SpringBoot技术栈搭建个人博客【后台开发】</a>
+                </div>
+                <div class="summary">
+                    按照设计的RESTful APIs进行后台开发，并实现日志记录/统计/权限等功能
+                </div>
+            </div>
+            <div class="aboutArticle">
+                <div class="title">
+                    <a href="https://www.jianshu.com/p/c66541e59249">SpringBoot技术栈搭建个人博客【前台开发/项目总结】</a>
+                </div>
+                <div class="summary">
+                    前后端结合以及项目总结
+                </div>
+            </div>
+        </div>
     </div>
-    <!--文章创建时间-->
-    <div>
-        <h5 id="articleCreateBy" th:text="${#dates.format(article.createBy, 'yyyy-MM-dd HH:mm:ss')}">时间：这里是文章创建时间</h5>
-    </div>
-    <!--文章题图-->
-    <div class="articlePicture">
-        <img id="articlePicture" src="" th:src="@{${article.pictureUrl}}"/>
-    </div>
-    <!--文章内容-->
-    <div id="articleContent" style="clear: both;" th:utext="${article.content}">
+    <!-- /. END ABOUT INFO -->
 
-    </div>
-
-    <!--评论列表-->
+    <!--留言区-->
     <div style="margin-top: 60px;">
-        <label>评论列表：</label>
+        <label>留言列表：</label>
     </div>
     <div id="commentList" class="commentList">
     </div>
+    <!-- /. END COMMENT LIST -->
 
-    <!--新增评论评论-->
-    <div class="comments">
+    <!--新增留言-->
+    <div class="comment">
         <div class="panel panel-default">
             <div class="panel-heading">
-                新增评论
+                新增留言
             </div>
             <div class="panel-body">
                 <label>名称：</label>
@@ -56,13 +75,12 @@
                 <div class="text-right">
                     <button id="addComment" class="btn btn-success">确认添加</button>
                 </div>
-
             </div>
+            <!-- /. END PANEL-BODY -->
         </div>
         <!-- /. END PANEL -->
     </div>
-    <!-- /. END COMMENTS -->
-
+    <!-- /. END COMMENT -->
 
     <!-- 提示不能为空信息MODAL -->
     <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
@@ -90,7 +108,6 @@
         </div>
     </div>
     <!-- /. END MODAL -->
-
     <!-- 添加成功提示信息MODAL -->
     <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
          aria-hidden="true">
@@ -116,18 +133,12 @@
         </div>
     </div>
     <!-- /. END MODAL -->
-
 </div>
+
 <!-- 引入尾部 -->
 <script language="javascript" type="text/javascript" src="/static/js/footer.js"></script>
-</body>
-
-
 <!-- 引入自己的JS -->
-<script src="/static/js/article.js"></script>
-<script>
-
-
-</script>
+<script src="/static/js/about.js"></script>
+</body>
 
 </html>

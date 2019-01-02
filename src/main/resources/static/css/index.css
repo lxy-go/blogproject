@@ -4,20 +4,19 @@ body {
 }
 
 #content {
-    max-height: 640px;
+    height: 800px;
     /*width: 100%;*/
     background-size: cover;
 }
 
 #articlePicture img {
-    height: 640px;
     object-fit: cover;
     width: 100%;
 }
 
 .smallArticlePictures {
     right: 6%;
-    top: 620px;
+    top: 790px;
     position: absolute;
     width: 600px;
     height: 110px;

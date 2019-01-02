@@ -419,4 +419,9 @@ public class ArticleServiceImpl implements ArticleService {
         }
         return articleCommentDTOList;
     }
+
+    @Override
+    public List<ArticleInfo> getLastAllArticleInfo() {
+        return articleInfoMapper.getLastAllArticle();
+    }
 }

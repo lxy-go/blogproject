@@ -4,9 +4,12 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.lxy.blogproject.dao.ArticleInfoMapper;
 import com.lxy.blogproject.dto.ArticleDTO;
+import com.lxy.blogproject.dto.ArticleTagDTO;
 import com.lxy.blogproject.entity.ArticleInfo;
+import com.lxy.blogproject.entity.CategoryInfo;
 import com.lxy.blogproject.service.ArticleService;
 import com.lxy.blogproject.util.MarkDown2HtmlUtil;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -24,6 +28,9 @@ public class PageController {
     ArticleInfoMapper articleInfoMapper;
     @Autowired
     ArticleService articleService;
+    @Autowired
+    ModelMapper modelMapper;
+
     /**
      * 导航起始页
      * @return
@@ -79,10 +86,35 @@ public class PageController {
     @GetMapping("/blogs")
     public String getBlog(@RequestParam(value="pn",defaultValue="1")Integer pn, Model model){
         PageHelper.startPage(pn,5);
-        List<ArticleInfo> articleInfos = articleInfoMapper.selectAll();
-        PageInfo pageInfo = new PageInfo(articleInfos,5);
-        model.addAttribute("blogs",pageInfo);
+        List<ArticleInfo> articleInfos = articleService.getLastAllArticleInfo();
+        PageInfo<ArticleInfo> pageInfo = new PageInfo<>(articleInfos, 5);
+        ArrayList<ArticleTagDTO> articleTagDTOList = new ArrayList<>();
+
+        for (ArticleInfo articleInfo : articleInfos) {
+            ArrayList<String> tags = new ArrayList<>();
+            ArticleTagDTO articleTagDTO = modelMapper.map(articleInfo, ArticleTagDTO.class);
+            Long id = articleInfo.getId();
+            List<CategoryInfo> categorys = articleService.getCategorysByArticleId(id);
+            for (CategoryInfo category : categorys) {
+                String tagName = category.getName();
+                tags.add(tagName);
+            }
+            articleTagDTO.setTags(tags);
+            articleTagDTOList.add(articleTagDTO);
+        }
+        PageInfo<ArticleTagDTO> pageInfo2 = new PageInfo<>(articleTagDTOList, 5);
+        pageInfo2.setNavigatepageNums(pageInfo.getNavigatepageNums());
+        pageInfo2.setPageNum(pageInfo.getPageNum());
+        pageInfo2.setTotal(pageInfo.getTotal());
+        model.addAttribute("blogs",pageInfo2);
         return "blog-list";
     }
-
+    @GetMapping("/about")
+    public String getAbout(){
+        return "about";
+    }
+     @GetMapping("/resume")
+    public String getResume(){
+        return "resume";
+    }
 }

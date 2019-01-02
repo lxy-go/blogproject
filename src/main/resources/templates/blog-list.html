@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:http="http://www.w3.org/1999/xhtml">
+<head th:replace="base::commonHead"></head>
 <head >
-    <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
     <link href="https://cdn.bootcss.com/twitter-bootstrap/3.3.4/css/bootstrap.css" rel="stylesheet">
     <link href="../static/css/blog-list.css" rel="stylesheet">
@@ -24,9 +25,13 @@
 
 <body>
 
-<div class="container">
+<div class="container-fluid ">
     <div class="row">
-        <img src="../static/img/blog-bg.jpg" width="100%" height="200" alt="xxx">
+        <!--寮曞叆澶撮儴-->
+        <nav th:replace="base::commonNav"></nav>
+    </div>
+    <div class="row">
+        <img src="../static/img/blog-bg.jpg" width="100%" height="320" alt="xxx">
     </div>
     <div class="row ">
         <div class="col-md-2"></div>
@@ -34,52 +39,27 @@
             <div class="row blog-header">
                 <div class="col-sm-3  ">
                     <div class="blog-title">
-                        博客文章
+                        鍗氬鏂囩珷
                     </div>
                 </div>
                   <div class="col-sm-5"></div>
                   <div class="col-sm-4">
                     <div class="search-bar">
-                        <input type="search" class="form-control">
+                        <input type="search" class="search-input">
                     </div>
                 </div>
             </div>
 
 
-            <div class="blog-list clearfix">
+            <div class="blog-list clearfix" th:each="blog:${blogs.list} ">
                 <div class="row">
-                <div class="blog-item">
-                    <div class="col-sm-3  ">
-                        <div class="left-date">
-                            <div class="month">
-                                12/26
-                            </div>
-                            <div class="year">
-                                2018
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-9 right-info">
-                        <div class="title">
-                            <a href="#">Hadoop的框架分析和解决方案</a>
-                        </div>
-                        <div class="summary">
-                            Hadoop的框架分析和解决方案Hadoop的框架分析和解决方案Hadoop的框架分析和解决方案
-                        </div>
-                        <div class="tag-list">
-                            <div class="tag">Hadoop</div>
-                            <div class="tag">Hadoop2</div>
-                        </div>
-                    </div>
-                </div>
                     <div class="blog-item">
                         <div class="col-sm-3  ">
                             <div class="left-date">
-                                <div class="month">
+                                <div class="month" th:text="${#dates.format(blog.createBy, 'MM/dd')}">
                                     12/26
                                 </div>
-                                <div class="year">
+                                <div class="year" th:text="${#dates.format(blog.createBy, 'yyyy')}">
                                     2018
                                 </div>
                             </div>
@@ -87,49 +67,34 @@
 
                         <div class="col-sm-9 right-info">
                             <div class="title">
-                                <a href="#">Hadoop的框架分析和解决方案</a>
+                                <a href="#" th:text="${blog.title}" th:href="@{'/article/'+${blog.id}}">Hadoop鐨勬鏋跺垎鏋愬拰瑙ｅ喅鏂规</a>
                             </div>
-                            <div class="summary">
-                                Hadoop的框架分析和解决方案Hadoop的框架分析和解决方案Hadoop的框架分析和解决方案
+                            <div class="summary" th:text="${blog.summary}">
+                                Hadoop鐨勬鏋跺垎鏋愬拰瑙ｅ喅鏂规Hadoop鐨勬鏋跺垎鏋愬拰瑙ｅ喅鏂规Hadoop鐨勬鏋跺垎鏋愬拰瑙ｅ喅鏂规Hadoop鐨勬鏋跺垎鏋愬拰瑙ｅ喅鏂规Hadoop鐨勬鏋跺垎鏋怘adoop鐨勬鏋跺垎鏋�
                             </div>
-                            <div class="tag-list">
-                                <div class="tag">Hadoop</div>
-                                <div class="tag">Hadoop2</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="blog-item">
-                        <div class="col-sm-3  ">
-                            <div class="left-date">
-                                <div class="month">
-                                    12/26
-                                </div>
-                                <div class="year">
-                                    2018
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-9 right-info">
-                            <div class="title">
-                                <a href="#">Hadoop的框架分析和解决方案</a>
-                            </div>
-                            <div class="summary">
-                                Hadoop的框架分析和解决方案Hadoop的框架分析和解决方案Hadoop的框架分析和解决方案
-                            </div>
-                            <div class="tag-list">
-                                <div class="tag">Hadoop</div>
-                                <div class="tag">Hadoop2</div>
+                            <div class="tag-list" >
+                                <th:block th:each="tag:${blog.tags}">
+                                    <div class="tag" th:text="${tag}">Hadoop</div>
+                                </th:block>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
+            <div class="page-list">
+                <th:block th:each="nav:${blogs.navigatepageNums}">
+                    <div class="page" th:classappend="${nav==blogs.pageNum}?'active':''">
+                        <a th:href="@{'/blogs?pn='+${nav}}" href="#"
+                           th:text="${nav}"></a>
+                    </div>
+                </th:block>
             </div>
         </div>
         <div class="col-md-2"></div>
     </div>
 </div>
+
 </body>
 
 </html>

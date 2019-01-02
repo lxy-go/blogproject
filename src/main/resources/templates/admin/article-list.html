@@ -217,7 +217,6 @@
                                     <li th:if="${articles.hasNextPage}">
                                         <a th:href="@{'?pn='+${articles.nextPage}}" href="#">下一页 &nbsp;<i class="fa fa-angle-right"></i></a>
                                     </li>
-
                                 </ul>
                                 <p th:text="${'当前显示&nbsp'+ (((articles.pageNum)-1)*(articles.pageSize)+1) +'&nbsp到&nbsp'+ ((!articles.isLastPage)?((articles.pageNum)*(articles.pageSize)):(articles.total)) +'&nbsp条，' + '总计&nbsp;'+ articles.pages+'&nbsp;页&nbsp;'+articles.total+' &nbsp条数据'}"></p>
                             </div><!-- /content-panel -->

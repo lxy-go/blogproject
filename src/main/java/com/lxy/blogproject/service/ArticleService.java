@@ -11,6 +11,8 @@ public interface ArticleService {
 
     public List<ArticleDTO> getAllArticleInfo();
 
+    public List<ArticleInfo> getLastAllArticleInfo();
+
     public ArticleInfo getArticleInfoById(Long id);
 
     public List<CategoryInfo> getCategorysByArticleId(Long articleId);
